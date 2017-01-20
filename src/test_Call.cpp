@@ -43,7 +43,7 @@ int main(int argc, char **argv) {
     BlackScholesModel *bSM = new BlackScholesModel(O->nbAssets, r, trends, dividends, sigma, spot, rho, &gaussianPool,&assetsPool);
 
     double fdStep = 0.01;
-    int nbSamples = 1000000;
+    int nbSamples = 5000000;
 
     PnlRng_Pool poolRng;
     poolRng.init(0);
@@ -57,12 +57,22 @@ int main(int argc, char **argv) {
     time_t after;
     double computingTime;
 
+
+    time(&before);
+	MC->price(NULL, 0,prix,ic,true);
+    time(&after);
+    computingTime = difftime(after,before);
+
+	std::cout << "Price = " << prix << " €\n";
+    std::cout << "Computing Time = " << computingTime << " seconds";
+
+    /*
     time(&before);
     SimulationHedger::hedging(MC,O->nbTimeSteps,"ProductPrices.txt","PortfolioPrices.txt","time.txt");
     time(&after);
     computingTime = difftime(after,before);
     std::cout << "Computing Time = " << computingTime << " seconds";
-
+    */
 
     /*
     PnlVect *delta = pnl_vect_create(O->nbAssets);

@@ -14,7 +14,7 @@
 using namespace std;
 
 int main(int argc, char **argv) {
-	double i0 = 10000;
+	double i0 = 100;
 
 	Product *actigo = new Actigo(i0);
 
@@ -29,9 +29,9 @@ int main(int argc, char **argv) {
 	double rDOL = 0.007;
 	double rAUD = 0.02;
 	PnlVect *sigma = pnl_vect_create(actigo->nbAssets);
-	LET(sigma, 0) = 0.16;
-	LET(sigma, 1) = 0.12;
-	LET(sigma, 2) = 0.16;
+	LET(sigma, 0) = 0.01;
+	LET(sigma, 1) = 0.01;
+	LET(sigma, 2) = 0.01;
 	LET(sigma, 3) = 0.01;
 	LET(sigma, 4) = 0.01;
 
@@ -70,7 +70,7 @@ int main(int argc, char **argv) {
 	}
 
 	double fdStep = 0.00001;
-	int nbSamples = 100000;
+	int nbSamples = 50000;
 
 	PnlMat *past = pnl_mat_create(1, actigo->nbAssets);
 	MLET(past, 0, 0) = 3300;
@@ -91,24 +91,17 @@ int main(int argc, char **argv) {
     time_t after;
     double computingTime;
 
-
-
-    /*
+/*
     time(&before);
 	MC->price(past, 0,prix,ic,true);
-    time(&after);
-    computingTime = difftime(after,before);
 
 	std::cout << "Price = " << prix << " €\n";
-    */
+    std::cout << "Capitalization Price = " << prix*exp(bSM->getSumForwardRates(0,actigo->maturity))  << " €\n";
 
-
-    /*
 	PnlVect *delta = pnl_vect_create(actigo->nbAssets);
 	PnlVect *deltaIC = pnl_vect_create(actigo->nbAssets);
 
-    time(&before);
-	MC->delta(NULL, 0, delta,deltaIC,true);
+	MC->delta(NULL, 0, delta,deltaIC,false);
     time(&after);
     computingTime = difftime(after,before);
 
@@ -116,14 +109,13 @@ int main(int argc, char **argv) {
 		std::cout << "delta[" << i << "] = " << GET(delta, i) << "\n";
 	}
     std::cout << "Computing Time = " << computingTime << " seconds";
-    */
+*/
 
     time(&before);
-    SimulationHedger::hedging(MC,actigo->nbTimeSteps*4,"ProductPrices.txt","PortfolioPrices.txt","time.txt");
+    SimulationHedger::hedging(MC,actigo->nbTimeSteps,"ProductPrices.txt","PortfolioPrices.txt","time.txt");
     time(&after);
     computingTime = difftime(after,before);
     std::cout << "Computing Time = " << computingTime << " seconds";
-
 	delete MC;
 	delete bSM;
 

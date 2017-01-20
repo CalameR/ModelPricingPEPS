@@ -24,7 +24,8 @@ double Actigo::payoff(const PnlMat *path) const {
 	double xed_0 = MGET(path, 0, 3);
 	double xea_0 = MGET(path, 0, 4);
 	for (int i = 1; i < nbTimeSteps + 1; i++) {
-		sumPerf += MAX((MGET(path, i, 0) / esx50_0) + (MGET(path, i, 1)*xed_0) / (ssp500_0*MGET(path, i, 3)) + (MGET(path, i, 2)*xea_0) / (ssp200_0*MGET(path, i, 4)) - 3, 0.0);
+		sumPerf += MAX((MGET(path, i, 0) / esx50_0) + (MGET(path, i, 1)*xed_0) / (ssp500_0*MGET(path, i, 3)) +
+							   (MGET(path, i, 2)*xea_0) / (ssp200_0*MGET(path, i, 4)) - 3.0, 0.0);
 	}
 
 	return initialInvestment*(1.0 + customerPerformance*(sumPerf/(3*nbTimeSteps)));

@@ -35,12 +35,35 @@ void SimulationHedger::hedging(MonteCarloPricer *monteCarloPricer, int H, char* 
     double freePortfolioValue;
     double riskPortfolioValue;
 
-    fstream fileProduct(fileProductName,ios::out|ios::trunc);
+    ofstream fileProduct(fileProductName,ios::out|ios::trunc);
     ofstream filePortfolio(filePortfolioName,ios::out|ios::trunc);
     ofstream fileTime(fileTimeName,ios::out|ios::trunc);
 
     if (fileProduct && filePortfolio && fileTime) {
         monteCarloPricer->mod->simulateUnderHistoricalProba(path,monteCarloPricer->prod->maturity,0, H,(*monteCarloPricer->poolRng)(),NULL);
+        ofstream fileESX50("ESX50.txt",ios::out|ios::trunc);
+        ofstream fileSSP500("SSP500.txt",ios::out|ios::trunc);
+        ofstream fileSSP200("SSP200.txt",ios::out|ios::trunc);
+        ofstream fileXED("XED.txt",ios::out|ios::trunc);
+        ofstream fileXEA("XEA.txt",ios::out|ios::trunc);
+
+        double esx50_0 = MGET(path, 0, 0);
+        double ssp500_0 = MGET(path, 0, 1);
+        double ssp200_0 = MGET(path, 0, 2);
+        double xed_0 = MGET(path, 0, 3);
+        double xea_0 = MGET(path, 0, 4);
+        for (int i=0; i <= H; i++) {
+            fileESX50 << MGET(path,i,0)/esx50_0 << "\n";
+            fileSSP500 << MGET(path,i,1)/ssp500_0 << "\n";
+            fileSSP200 << MGET(path,i,2)/ssp200_0 << "\n";
+            fileXED << MGET(path,i,3)/xed_0 << "\n";
+            fileXEA << MGET(path,i,4)/xea_0 << "\n";
+        }
+        fileESX50.close();
+        fileSSP500.close();
+        fileSSP200.close();
+        fileXEA.close();
+        fileXED.close();
 
         for (int i = 0; i <= H; i++) {
 
@@ -84,6 +107,7 @@ void SimulationHedger::hedging(MonteCarloPricer *monteCarloPricer, int H, char* 
         fileTime.close();
 
         std::cout << "Product Price = " << price << " €\n";
+        std::cout << "Capitalization Product Price = " << price*exp(monteCarloPricer->mod->getSumForwardRates(0,monteCarloPricer->prod->maturity))  << " €\n";
         std::cout << "Portfolio Price = " << portfolioValue << " €\n";
         double PL = portfolioValue - price;
         std::cout << "P&L = " << PL << " €\n";
