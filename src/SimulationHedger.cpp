@@ -4,7 +4,7 @@
 
 #include "SimulationHedger.h"
 
-void SimulationHedger::hedging(MonteCarloPricer *monteCarloPricer, int H, char* fileProductName, char* filePortfolioName, char* fileTimeName) {
+void SimulationHedger::hedging(MonteCarloPricer *monteCarloPricer, int H, char* fileProductName, char* filePortfolioName, char* fileTimeName, bool isParallel) {
     if (H <= 0) {
         throw std::invalid_argument("Number of discretization steps must be positive!");
     }
@@ -41,7 +41,8 @@ void SimulationHedger::hedging(MonteCarloPricer *monteCarloPricer, int H, char* 
 
     if (fileProduct && filePortfolio && fileTime) {
         monteCarloPricer->mod->simulateUnderHistoricalProba(path,monteCarloPricer->prod->maturity,0, H,(*monteCarloPricer->poolRng)(),NULL);
-        ofstream fileESX50("ESX50.txt",ios::out|ios::trunc);
+
+        /*ofstream fileESX50("ESX50.txt",ios::out|ios::trunc);
         ofstream fileSSP500("SSP500.txt",ios::out|ios::trunc);
         ofstream fileSSP200("SSP200.txt",ios::out|ios::trunc);
         ofstream fileXED("XED.txt",ios::out|ios::trunc);
@@ -64,6 +65,7 @@ void SimulationHedger::hedging(MonteCarloPricer *monteCarloPricer, int H, char* 
         fileSSP200.close();
         fileXEA.close();
         fileXED.close();
+         */
 
         for (int i = 0; i <= H; i++) {
 
@@ -75,8 +77,8 @@ void SimulationHedger::hedging(MonteCarloPricer *monteCarloPricer, int H, char* 
                 pnl_mat_add_row(pathPayoff, pathPayoff->m, assetsPrices);
             }
 
-            monteCarloPricer->price(pathPayoff,currentDate,price,ic,true);
-            monteCarloPricer->delta(pathPayoff,currentDate,deltas,deltasIC,true);
+            monteCarloPricer->price(pathPayoff,currentDate,price,ic,isParallel);
+            monteCarloPricer->delta(pathPayoff,currentDate,deltas,deltasIC,isParallel);
 
             capitalization = exp(monteCarloPricer->mod->getSumForwardRates(currentDate,currentDate+timeToNextDate));
 

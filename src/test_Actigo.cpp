@@ -29,11 +29,11 @@ int main(int argc, char **argv) {
 	double rDOL = 0.007;
 	double rAUD = 0.02;
 	PnlVect *sigma = pnl_vect_create(actigo->nbAssets);
-	LET(sigma, 0) = 0.01;
-	LET(sigma, 1) = 0.01;
-	LET(sigma, 2) = 0.01;
-	LET(sigma, 3) = 0.01;
-	LET(sigma, 4) = 0.01;
+	LET(sigma, 0) = 0.16;
+	LET(sigma, 1) = 0.12;
+	LET(sigma, 2) = 0.16;
+	LET(sigma, 3) = 0.15;
+	LET(sigma, 4) = 0.15;
 
 	PnlVect *spot = pnl_vect_create(actigo->nbAssets);
 	LET(spot, 0) = 3300;
@@ -111,8 +111,10 @@ int main(int argc, char **argv) {
     std::cout << "Computing Time = " << computingTime << " seconds";
 */
 
+	// A changer si nécessaire !!!
+	bool isParallel = true;
     time(&before);
-    SimulationHedger::hedging(MC,actigo->nbTimeSteps,"ProductPrices.txt","PortfolioPrices.txt","time.txt");
+    SimulationHedger::hedging(MC,actigo->nbTimeSteps*3,"ProductPrices.txt","PortfolioPrices.txt","time.txt",isParallel);
     time(&after);
     computingTime = difftime(after,before);
     std::cout << "Computing Time = " << computingTime << " seconds";

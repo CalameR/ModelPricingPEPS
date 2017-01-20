@@ -12,7 +12,7 @@
 
 class SimulationHedger {
 public:
-    static void hedging(MonteCarloPricer *monteCarloPricer, int H, char* fileProductName, char* filePortfolioName, char* fileTimeName);
+    static void hedging(MonteCarloPricer *monteCarloPricer, int H, char* fileProductName, char* filePortfolioName, char* fileTimeName, bool isParallel);
 };
 
 #endif //MC_PRICER_SIMULATIONHEDGER_H
