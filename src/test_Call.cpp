@@ -57,22 +57,30 @@ int main(int argc, char **argv) {
     time_t after;
     double computingTime;
 
+    std::cout << "Call vanille :" <<"\n";
+    std::cout <<  "Prix spot du sous jacent S0 = " << GET(spot,0) << " €" <<"\n";
+    std::cout <<  "Strike K = " << strike << " €" <<"\n";
+    std::cout <<  "Echéance T = " << T << " an" <<"\n";
+    std::cout <<  "Nombre de dates de constatation = " << nbTimeSteps <<"\n";
+    std::cout <<  "Volatilité du sous-jacent = " << GET(sigma,0) <<"\n";
+    std::cout <<  "Tendance = " << GET(trends,0) <<"\n";
 
     time(&before);
 	MC->price(NULL, 0,prix,ic,true);
     time(&after);
     computingTime = difftime(after,before);
 
-	std::cout << "Price = " << prix << " €\n";
-    std::cout << "Computing Time = " << computingTime << " seconds\n";
+    std::cout << "\nCalcul du prix du Call " << " \n" ;
+	std::cout << "Prix du Call en t = 0 :  " << prix << " €\n";
+    std::cout << "Temps de calcul = " << computingTime << " secondes\n\n";
 
-
+    std::cout << "Simulation de la couverture : " << " \n" ;
     bool isParallel = true;
     time(&before);
     SimulationHedger::hedging(MC,O->nbTimeSteps*4*3,"ProductPrices.txt","PortfolioPrices.txt","time.txt",isParallel);
     time(&after);
     computingTime = difftime(after,before);
-    std::cout << "Computing Time = " << computingTime << " seconds";
+    std::cout << "Temps de calcul = " << computingTime << " secondes";
 
     /*
     PnlVect *delta = pnl_vect_create(O->nbAssets);
