@@ -1,7 +1,7 @@
 x = scan("ProductPrices.txt")
 y = scan("PortfolioPrices.txt")
 t = scan("time.txt")
-plot(t,x,type="l",col="blue")
+plot(t,x,type="l",col="blue",xlim=c(0,8),ylim=c(85,115))
 
 lines(t,y,col="red")
 legend( x="topleft", 
