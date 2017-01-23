@@ -3,95 +3,58 @@
 //
 
 #include <iostream>
-#include <string>
 #include "BasketOption.h"
 #include "BlackScholesModel.h"
 #include "MonteCarloPricer.h"
-#include <ctime>
 #include <cassert>
-#include <omp.h>
-#include <fstream>
-#include "SimulationHedger.h"
 
 using namespace std;
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
+    /* 1st test : Vanilla Call Option */
+    double T1 = 1;
+    int size1 = 1;
+    int nbTimeSteps1 = 10;
+    double strike1 = 10;
+    PnlVect* lambda1 = pnl_vect_create_from_scalar(size1,1);
 
-    double T = 1;
-    int size = 1;
-    int nbTimeSteps = 12;
-    double strike = 15;
-    PnlVect *lambda = pnl_vect_create_from_scalar(size, 1);
+    Product *O1 = new BasketOption(T1,size1,nbTimeSteps1,lambda1,strike1);
 
-    Product *O = new BasketOption(T, size, nbTimeSteps, lambda, strike);
-
-    double r = 0.05;
-    PnlMat *rho = pnl_mat_create_from_scalar(1,1,1);
-    PnlVect *sigma = pnl_vect_create_from_scalar(size, 0.3);
-    PnlVect *spot = pnl_vect_create_from_scalar(size, 10);
-
-    int nbMarkets = 1;
-    PnlVect *trends = pnl_vect_create_from_scalar(size, 0.25);
-    PnlVect *dividends = pnl_vect_create_from_double(size, 0.0);
+    double r1 = 0.05;
+    double rho1 = 1;
+    PnlVect *sigma1 = pnl_vect_create_from_scalar(size1,0.3);
+    PnlVect *spot1 = pnl_vect_create_from_scalar(size1,10);
+    PnlVect *trends = pnl_vect_create_from_double(size1,0.);
+    PnlVect *dividends = pnl_vect_create_from_double(size1,0.);
+    PnlMat *rho = pnl_mat_create_from_double(size1,size1,rho1);
 
     PnlVect_Pool gaussianPool;
-    gaussianPool.init(O->nbAssets);
+    gaussianPool.init(size1);
 
     PnlVect_Pool assetsPool;
-    assetsPool.init(O->nbAssets);
+    assetsPool.init(size1);
 
-    BlackScholesModel *bSM = new BlackScholesModel(O->nbAssets, r, trends, dividends, sigma, spot, rho, &gaussianPool,&assetsPool);
+    BlackScholesModel *bSM1 = new BlackScholesModel(size1,r1,trends,dividends,sigma1,spot1,rho,&gaussianPool,&assetsPool);
 
-    double fdStep = 0.01;
-    int nbSamples = 100000;
+    double fdStep1 = 0.01;
+    int nbSamples1 = 100000;
 
     PnlRng_Pool poolRng;
     poolRng.init(0);
 
-    MonteCarloPricer *MC = new MonteCarloPricer(bSM, O, fdStep, nbSamples,&poolRng);
+    MonteCarloPricer *MC1 = new MonteCarloPricer(bSM1, O1, fdStep1, nbSamples1, &poolRng);
+    double prix1;
+    double ic1;
+    MC1->price(NULL,0,prix1,ic1,false);
 
-    double prix;
-    double ic;
+    std::cout << "prix = " << prix1 << "\n";
 
-    time_t before;
-    time_t after;
-    double computingTime;
+    assert((prix1 - ic1 < 1.423) && (prix1 + ic1 > 1.423));
+    cout << "1st MonteCarlo Initial Price OK" << "\n";
 
-
-    time(&before);
-	MC->price(NULL, 0,prix,ic,true);
-    time(&after);
-    computingTime = difftime(after,before);
-
-	std::cout << "Price = " << prix << " €\n";
-    std::cout << "Computing Time = " << computingTime << " seconds\n";
-
-
-    bool isParallel = true;
-    time(&before);
-    SimulationHedger::hedging(MC,O->nbTimeSteps*4*3,"ProductPrices.txt","PortfolioPrices.txt","time.txt",isParallel);
-    time(&after);
-    computingTime = difftime(after,before);
-    std::cout << "Computing Time = " << computingTime << " seconds";
-
-    /*
-    PnlVect *delta = pnl_vect_create(O->nbAssets);
-    PnlVect *deltaIC = pnl_vect_create(O->nbAssets);
-
-    time(&before);
-    MC->delta(NULL, 0, delta,deltaIC,true);
-    time(&after);
-    computingTime = difftime(after,before);
-
-    for (int i = 0; i < O->nbAssets; i++) {
-        std::cout << "delta[" << i << "] = " << GET(delta, i) << "\n";
-        std::cout << "ic[" << i << "] = " << GET(deltaIC, i) << "\n";
-    }
-    std::cout << "Computing Time = " << computingTime << " seconds";
-    */
-
-    pnl_vect_free(&lambda);
-    delete bSM;
-    delete MC;
+    pnl_vect_free(&lambda1);
+    pnl_vect_free(&sigma1);
+    pnl_vect_free(&spot1);
 }
 
