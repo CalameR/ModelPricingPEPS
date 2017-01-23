@@ -113,11 +113,30 @@ int main(int argc, char **argv) {
 
 	// A changer si nécessaire !!!
 	bool isParallel = true;
+	std::cout << "Produit Actigo :"  << "\n\n";
+	std::cout << "Investissement initial : "  << i0 << " €\n\n";
+	std::cout <<  "Nombre de dates de constatation = " << actigo->nbTimeSteps <<"\n";
+
+	std::cout << "Taux d'intérêts : "  << "\n";
+	std::cout << "rEUR = " << rEUR << "\n";
+	std::cout << "rUSD = " << rDOL << "\n";
+	std::cout << "rAUD = " << rAUD << "\n\n";
+
+	std::cout << "Volatilités des sous-jacents : "  << "\n";
+	std::cout << "vol SX5E = " << GET(sigma, 0) << "\n";
+	std::cout << "vol S&P500 = " << GET(sigma, 1)  << "\n";
+	std::cout << "vol S&P200 = " << GET(sigma, 2) << "\n";
+	std::cout << "vol EUR/USD = " << GET(sigma, 3) << "\n";
+	std::cout << "vol EUR/AUD = " << GET(sigma, 4)  << "\n\n";
+
+
+	std::cout << "Simulation de la couverture : " << " \n" ;
     time(&before);
     SimulationHedger::hedging(MC,actigo->nbTimeSteps*3,"ProductPrices.txt","PortfolioPrices.txt","time.txt",isParallel);
     time(&after);
     computingTime = difftime(after,before);
-    std::cout << "Computing Time = " << computingTime << " seconds";
+
+	std::cout << "Temps de calcul = " << computingTime << " secondes";
 	delete MC;
 	delete bSM;
 

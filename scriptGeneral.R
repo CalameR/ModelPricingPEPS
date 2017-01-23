@@ -1,3 +1,14 @@
+x = scan("ProductPrices.txt")
+y = scan("PortfolioPrices.txt")
+t = scan("time.txt")
+plot(t,x,type="l",col="blue")
+
+lines(t,y,col="red")
+legend( x="topleft", 
+         legend=c("Prix du produit","Prix du portefeuille de couverture"),
+         col=c("blue","red"), pch = 20 , bty = "n" )
+
+dev.new()
 x1 = scan("ESX50.txt")
 x2 = scan("SSP500.txt")
 x3 = scan("SSP200.txt")

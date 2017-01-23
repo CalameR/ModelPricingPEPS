@@ -43,10 +43,44 @@ int main(int argc, char **argv)
     PnlRng_Pool poolRng;
     poolRng.init(0);
 
-    MonteCarloPricer *MC1 = new MonteCarloPricer(bSM1, O1, fdStep1, nbSamples1, &poolRng);
-    double prix1;
-    double ic1;
-    MC1->price(NULL,0,prix1,ic1,false);
+    MonteCarloPricer *MC = new MonteCarloPricer(bSM, O, fdStep, nbSamples,&poolRng);
+
+    double prix;
+    double ic;
+
+    time_t before;
+    time_t after;
+    double computingTime;
+
+    std::cout << "Call vanille :" <<"\n";
+    std::cout <<  "Prix spot du sous jacent S0 = " << GET(spot,0) << " €" <<"\n";
+    std::cout <<  "Strike K = " << strike << " €" <<"\n";
+    std::cout <<  "Echéance T = " << T << " an" <<"\n";
+    std::cout <<  "Nombre de dates de constatation = " << nbTimeSteps <<"\n";
+    std::cout <<  "Volatilité du sous-jacent = " << GET(sigma,0) <<"\n";
+    std::cout <<  "Tendance = " << GET(trends,0) <<"\n";
+
+    time(&before);
+	MC->price(NULL, 0,prix,ic,true);
+    time(&after);
+    computingTime = difftime(after,before);
+
+    std::cout << "\nCalcul du prix du Call " << " \n" ;
+	std::cout << "Prix du Call en t = 0 :  " << prix << " €\n";
+    std::cout << "Temps de calcul = " << computingTime << " secondes\n\n";
+
+    std::cout << "Simulation de la couverture : " << " \n" ;
+    bool isParallel = true;
+    time(&before);
+    SimulationHedger::hedging(MC,O->nbTimeSteps*4*3,"ProductPrices.txt","PortfolioPrices.txt","time.txt",isParallel);
+    time(&after);
+    computingTime = difftime(after,before);
+    std::cout << "Temps de calcul = " << computingTime << " secondes";
+
+    /*
+    PnlVect *delta = pnl_vect_create(O->nbAssets);
+    PnlVect *deltaIC = pnl_vect_create(O->nbAssets);
+>>>>>>> fa9ba4348acf948966221e160d325ebc0b4b2e7d
 
     std::cout << "prix = " << prix1 << "\n";
 

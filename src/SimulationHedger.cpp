@@ -41,8 +41,8 @@ void SimulationHedger::hedging(MonteCarloPricer *monteCarloPricer, int H, char* 
 
     if (fileProduct && filePortfolio && fileTime) {
         monteCarloPricer->mod->simulateUnderHistoricalProba(path,monteCarloPricer->prod->maturity,0, H,(*monteCarloPricer->poolRng)(),NULL);
-
-        /*ofstream fileESX50("ESX50.txt",ios::out|ios::trunc);
+        if(path->n == 5){
+        ofstream fileESX50("ESX50.txt",ios::out|ios::trunc);
         ofstream fileSSP500("SSP500.txt",ios::out|ios::trunc);
         ofstream fileSSP200("SSP200.txt",ios::out|ios::trunc);
         ofstream fileXED("XED.txt",ios::out|ios::trunc);
@@ -65,7 +65,7 @@ void SimulationHedger::hedging(MonteCarloPricer *monteCarloPricer, int H, char* 
         fileSSP200.close();
         fileXEA.close();
         fileXED.close();
-         */
+        }
 
         for (int i = 0; i <= H; i++) {
 
@@ -108,11 +108,13 @@ void SimulationHedger::hedging(MonteCarloPricer *monteCarloPricer, int H, char* 
         filePortfolio.close();
         fileTime.close();
 
-        std::cout << "Product Price = " << price << " €\n";
-        std::cout << "Capitalization Product Price = " << price*exp(monteCarloPricer->mod->getSumForwardRates(0,monteCarloPricer->prod->maturity))  << " €\n";
-        std::cout << "Portfolio Price = " << portfolioValue << " €\n";
+        std::cout << "Prix du produit à échéance = " << price << " €\n";
+        //std::cout << "Capitalization Product Price = " << price*exp(monteCarloPricer->mod->getSumForwardRates(0,monteCarloPricer->prod->maturity))  << " €\n";
+        std::cout << "Valeur du portefeuille de couverture = " << portfolioValue << " €\n";
         double PL = portfolioValue - price;
         std::cout << "P&L = " << PL << " €\n";
+
+        std::cout << "\nPour visualiser les cours des actifs, du portefeuille et du produit, lancer les scripts R " << " \n";
     }
 
     pnl_mat_free(&pathPayoff);
