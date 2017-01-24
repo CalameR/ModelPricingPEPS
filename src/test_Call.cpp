@@ -6,6 +6,7 @@
 #include "BasketOption.h"
 #include "BlackScholesModel.h"
 #include "MonteCarloPricer.h"
+#include "SimulationHedger.h"
 #include <cassert>
 
 using namespace std;
@@ -43,7 +44,7 @@ int main(int argc, char **argv)
     PnlRng_Pool poolRng;
     poolRng.init(0);
 
-    MonteCarloPricer *MC = new MonteCarloPricer(bSM, O, fdStep, nbSamples,&poolRng);
+    MonteCarloPricer *MC = new MonteCarloPricer(bSM1, O1, fdStep1, nbSamples1,&poolRng);
 
     double prix;
     double ic;
@@ -53,11 +54,11 @@ int main(int argc, char **argv)
     double computingTime;
 
     std::cout << "Call vanille :" <<"\n";
-    std::cout <<  "Prix spot du sous jacent S0 = " << GET(spot,0) << " €" <<"\n";
-    std::cout <<  "Strike K = " << strike << " €" <<"\n";
-    std::cout <<  "Echéance T = " << T << " an" <<"\n";
-    std::cout <<  "Nombre de dates de constatation = " << nbTimeSteps <<"\n";
-    std::cout <<  "Volatilité du sous-jacent = " << GET(sigma,0) <<"\n";
+    std::cout <<  "Prix spot du sous jacent S0 = " << GET(spot1,0) << " €" <<"\n";
+    std::cout <<  "Strike K = " << strike1 << " €" <<"\n";
+    std::cout <<  "Echéance T = " << T1 << " an" <<"\n";
+    std::cout <<  "Nombre de dates de constatation = " << nbTimeSteps1 <<"\n";
+    std::cout <<  "Volatilité du sous-jacent = " << GET(sigma1,0) <<"\n";
     std::cout <<  "Tendance = " << GET(trends,0) <<"\n";
 
     time(&before);
@@ -72,7 +73,7 @@ int main(int argc, char **argv)
     std::cout << "Simulation de la couverture : " << " \n" ;
     bool isParallel = true;
     time(&before);
-    SimulationHedger::hedging(MC,O->nbTimeSteps*4*3,"ProductPrices.txt","PortfolioPrices.txt","time.txt",isParallel);
+    SimulationHedger::hedging(MC,O1->nbTimeSteps*4*3,"ProductPrices.txt","PortfolioPrices.txt","time.txt",isParallel);
     time(&after);
     computingTime = difftime(after,before);
     std::cout << "Temps de calcul = " << computingTime << " secondes";
@@ -90,5 +91,6 @@ int main(int argc, char **argv)
     pnl_vect_free(&lambda1);
     pnl_vect_free(&sigma1);
     pnl_vect_free(&spot1);
+     */
 }
 
