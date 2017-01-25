@@ -3,6 +3,9 @@
 //
 
 #include "BlackScholesModel.h"
+#include <tgmath.h>
+#include <cmath>
+
 
 BlackScholesModel::BlackScholesModel(int dim, double interestRate, PnlVect *trends, PnlVect *dividends, PnlVect *volatilities,
                                      PnlVect *spots, PnlMat *correlations)
@@ -40,7 +43,7 @@ inline void BlackScholesModel::nextIteration(PnlMat *path, const PnlVect *spots,
 
 	for (int d = 0; d < dim; d++) {
 		double vol = GET(volatilities, d);
-		double val = (*this.*(trendFunc))(d) - (pow(vol, 2.0) / 2.0);
+		double val = (*this.*(trendFunc))(d) - (vol*vol)/ 2.0;
 
 		val *= timeStep;
 		val += vol * sqrt(timeStep) * GET((*assetsPool)(), d);
@@ -118,9 +121,8 @@ void BlackScholesModel::simulateUnderRiskNeutralProba(PnlMat *path, double T, do
 }
 
 inline bool BlackScholesModel::isRecognitionDate(double t, double T, int nbTimeSteps) {
-	double timestep = T / (double)nbTimeSteps;
-	double mod = fmod(t, timestep);
-	return (fabs(mod) < DBL_EPSILON);
+	long double timestep = ((long double)T) / ((long double) nbTimeSteps);
+	return (fabsl(fmodl(((long double) t) + DBL_EPSILON,timestep)) < 10. * DBL_EPSILON);
 }
 
 
