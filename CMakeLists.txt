@@ -62,6 +62,10 @@ target_link_libraries(asian-test ${LIBS})
 add_executable(basket-test src/BasketOption.cpp src/Utils.cpp src/BlackScholesModel.cpp src/MonteCarloPricer.cpp src/test_BasketOption.cpp src/SimulationHedger.cpp src/Model.cpp)
 target_link_libraries(basket-test ${LIBS})
 
+# Testing Quanto Option
+add_executable(quanto-test src/QuantoOption.cpp src/Utils.cpp src/BlackScholesModel.cpp src/MonteCarloPricer.cpp src/test_QuantoOption.cpp src/SimulationHedger.cpp src/Model.cpp)
+target_link_libraries(quanto-test ${LIBS})
+
 # Testing Performance Option
 add_executable(performance-test src/PerformanceOption.cpp src/Utils.cpp src/BlackScholesModel.cpp src/MonteCarloPricer.cpp src/test_PerformanceOption.cpp src/SimulationHedger.cpp src/Model.cpp)
 target_link_libraries(performance-test ${LIBS})
