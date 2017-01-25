@@ -23,6 +23,8 @@ public:
 
     virtual ~AsianOption();
 
+    string getName() const { return "AsianOption"; }
+
 private:
     PnlVect *spot;
     PnlVect *lambda;

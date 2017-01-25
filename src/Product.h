@@ -16,6 +16,7 @@ public:
 	int nbAssets;
 	string name;
 	virtual double payoff(const PnlMat* path) const = 0;
+	virtual string getName() const = 0;
 };
 
 #endif

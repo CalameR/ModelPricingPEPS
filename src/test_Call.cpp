@@ -73,7 +73,7 @@ int main(int argc, char **argv)
     std::cout << "Simulation de la couverture : " << " \n" ;
     bool isParallel = true;
     time(&before);
-    SimulationHedger::hedging(MC,O1->nbTimeSteps*4*3,"ProductPrices.txt","PortfolioPrices.txt","time.txt",isParallel);
+    SimulationHedger::hedging_PL_Prices(MC,O1->nbTimeSteps,"ProductPrices.txt","PortfolioPrices.txt","time.txt",isParallel);
     time(&after);
     computingTime = difftime(after,before);
     std::cout << "Temps de calcul = " << computingTime << " secondes";

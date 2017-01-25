@@ -22,6 +22,8 @@ public:
 
     virtual ~PerformanceOption();
 
+    string getName() const { return "PerformanceOption"; }
+
 private:
     PnlVect *spot;
     PnlVect *lambda;
