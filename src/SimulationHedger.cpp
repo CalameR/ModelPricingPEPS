@@ -114,7 +114,7 @@ void SimulationHedger::hedging_PL_Prices(MonteCarloPricer *monteCarloPricer, int
         }
 
         for (int i=0; i <= H; i++) {
-            double t = i*(monteCarloPricer->prod->maturity)/(double)H;
+            double t = ((double)i)*(monteCarloPricer->prod->maturity)/(double)H;
             fileTime << t << "\n";
         }
 
@@ -123,7 +123,7 @@ void SimulationHedger::hedging_PL_Prices(MonteCarloPricer *monteCarloPricer, int
         fileTime.close();
 
         std::cout << "Prix du produit à échéance = " << price << " €\n";
-        std::cout << "Valeur du portefeuille de couverture = " << freePortfolioValue << " €\n";
+        std::cout << "Valeur du portefeuille de couverture = " << freePortfolioValue + riskPortfolioValue << " €\n";
         double PL = freePortfolioValue + riskPortfolioValue - price;
         std::cout << "P&L = " << PL << " €\n";
 
