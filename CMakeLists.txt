@@ -70,6 +70,10 @@ target_link_libraries(performance-test ${LIBS})
 add_executable(utils-test src/Utils.cpp src/test_Utils.cpp)
 target_link_libraries(utils-test ${LIBS})
 
+# Testing Black Scholes Model
+add_executable(blackscholes-test src/test_BlackScholesModel.cpp src/BlackScholesModel.cpp src/Model.cpp src/Utils.cpp)
+target_link_libraries(blackscholes-test ${LIBS})
+
 
 # Print compiler flags
 get_directory_property(DirDefs COMPILE_DEFINITIONS)
