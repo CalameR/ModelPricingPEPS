@@ -7,6 +7,7 @@
 #include "AsianOption.h"
 #include "BlackScholesModel.h"
 #include "MonteCarloPricer.h"
+#include "SimulationHedger.h"
 
 int main(int argc, char **argv)
 {
@@ -46,6 +47,9 @@ int main(int argc, char **argv)
 
     assert((prix3 - ic3 < 4.67) && (prix3 + ic3 > 4.67));
     cout << "3rd MonteCarlo Initial Price OK" << "\n";
+
+    std::cout << "Simulation de la couverture : " << " \n" ;
+    SimulationHedger::hedging_PL_Prices(MC3,Opt3->nbTimeSteps*3,"AsianPrices.txt","PortfolioPricesAsian.txt","timeAsian.txt",true);
 
     pnl_vect_free(&lambda3);
     pnl_vect_free(&sigma3);

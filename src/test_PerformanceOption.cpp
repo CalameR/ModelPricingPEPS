@@ -8,6 +8,7 @@
 #include "PerformanceOption.h"
 #include "BlackScholesModel.h"
 #include "MonteCarloPricer.h"
+#include "SimulationHedger.h"
 
 int main(int argc, char **argv)
 {
@@ -45,6 +46,10 @@ int main(int argc, char **argv)
 
     assert((prix4 - ic4 < 1.257353) && (prix4 + ic4 > 1.257353));
     cout << "4rd MonteCarlo Initial Price OK" << "\n";
+
+
+    std::cout << "Simulation de la couverture : " << " \n" ;
+    SimulationHedger::hedging_PL_Prices(MC4,Opt4->nbTimeSteps*60,"PerfPrices.txt","PortfolioPricesPerf.txt","timePerf.txt",!true);
 
     pnl_vect_free(&lambda4);
     pnl_vect_free(&sigma4);
