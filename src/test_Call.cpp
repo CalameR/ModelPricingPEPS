@@ -17,8 +17,8 @@ int main(int argc, char **argv)
     /* 1st test : Vanilla Call Option */
     double T1 = 1;
     int size1 = 1;
-    int nbTimeSteps1 = 1;
-    double strike1 = 10;
+    int nbTimeSteps1 = 12;
+    double strike1 = 14;
     PnlVect* lambda1 = pnl_vect_create_from_scalar(size1,1);
 
     Product *O1 = new BasketOption(T1,size1,nbTimeSteps1,lambda1,strike1);
@@ -69,7 +69,7 @@ int main(int argc, char **argv)
 
     std::cout << "Simulation de la couverture : " << " \n" ;
 
-    SimulationHedger::hedging_PL_Prices(MC,O1->nbTimeSteps*365,"CallPrices.txt","PortfolioPricesCall.txt","timeCall.txt",true);
+    SimulationHedger::hedging_PL_Prices(MC,O1->nbTimeSteps*4*7,"CallPrices.txt","PortfolioPricesCall.txt","timeCall.txt",true);
 
     pnl_vect_free(&lambda1);
     pnl_vect_free(&sigma1);

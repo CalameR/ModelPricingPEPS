@@ -114,12 +114,12 @@ int main(int argc, char **argv) {
 
 	std::cout << "Simulation de la couverture : " << " \n" ;
     time(&before);
-    //SimulationHedger::hedging_PL_Prices(MC,actigo->nbTimeSteps*3,"ProductPrices.txt","PortfolioPrices.txt","time.txt",isParallel);
-    double PL = SimulationHedger::hedging_PL(MC,actigo->nbTimeSteps*3,isParallel);
+    SimulationHedger::hedging_PL_Prices(MC,actigo->nbTimeSteps*6*30,"ProductPrices.txt","PortfolioPrices.txt","time.txt",isParallel);
+    //double PL = SimulationHedger::hedging_PL(MC,actigo->nbTimeSteps*6*30,isParallel);
     time(&after);
     computingTime = difftime(after,before);
 
-    std::cout << "PL = " << PL << " €\n";
+    //std::cout << "PL = " << PL << " €\n";
 	std::cout << "Temps de calcul = " << computingTime << " secondes";
 
 }
