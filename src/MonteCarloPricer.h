@@ -8,12 +8,18 @@ class MonteCarloPricer : public Pricer {
 public:
 	int nbSamples;
 	Model *mod;
-	PnlRng_Pool *poolRng;
 	double fdStep;
+    PnlRng_Pool *poolRng;
 
-	MonteCarloPricer(Model *mod, Product *prod, double fdStep, int nbSamples, PnlRng_Pool *poolRng);
+	MonteCarloPricer(Model *mod, Product *prod, double fdStep, int nbSamples);
 
 	void price(const PnlMat *past, double t, double &price, double &ic, bool parallel);
 	void delta(const PnlMat *past, double t, PnlVect *delta, PnlVect *ic, bool parallel);
+private:
+    PnlMat_Pool *path;
+    PnlMat_Pool *shiftedPath;
+    PnlVect *st;
+    PnlVect *st2;
+    PnlVect *sum2;
 
 };

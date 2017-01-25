@@ -17,7 +17,7 @@ int main(int argc, char **argv)
     /* 1st test : Vanilla Call Option */
     double T1 = 1;
     int size1 = 1;
-    int nbTimeSteps1 = 10;
+    int nbTimeSteps1 = 1;
     double strike1 = 10;
     PnlVect* lambda1 = pnl_vect_create_from_scalar(size1,1);
 
@@ -34,21 +34,12 @@ int main(int argc, char **argv)
     PnlVect *dividends = pnl_vect_create_from_double(size1,divid);
     PnlMat *rho = pnl_mat_create_from_double(size1,size1,rho1);
 
-    PnlVect_Pool gaussianPool;
-    gaussianPool.init(size1);
-
-    PnlVect_Pool assetsPool;
-    assetsPool.init(size1);
-
-    BlackScholesModel *bSM1 = new BlackScholesModel(size1,r1,trends,dividends,sigma1,spot1,rho,&gaussianPool,&assetsPool);
+    BlackScholesModel *bSM1 = new BlackScholesModel(size1,r1,trends,dividends,sigma1,spot1,rho);
 
     double fdStep1 = 0.01;
-    int nbSamples1 = 1000000;
+    int nbSamples1 = 50000;
 
-    PnlRng_Pool poolRng;
-    poolRng.init(0);
-
-    MonteCarloPricer *MC = new MonteCarloPricer(bSM1, O1, fdStep1, nbSamples1,&poolRng);
+    MonteCarloPricer *MC = new MonteCarloPricer(bSM1, O1, fdStep1, nbSamples1);
 
     double prix;
     double ic;
@@ -57,7 +48,6 @@ int main(int argc, char **argv)
 
     double realPrix;
     double realDelta;
-
 
 	MC->price(NULL,0,prix,ic,true);
     MC->delta(NULL,0,delta,deltaIC,true);
@@ -79,14 +69,11 @@ int main(int argc, char **argv)
 
     std::cout << "Simulation de la couverture : " << " \n" ;
 
-    SimulationHedger::hedging_PL_Prices(MC,O1->nbTimeSteps*3,"CallPrices.txt","PortfolioPricesCall.txt","timeCall.txt",true);
-
-
+    SimulationHedger::hedging_PL_Prices(MC,O1->nbTimeSteps*365,"CallPrices.txt","PortfolioPricesCall.txt","timeCall.txt",true);
 
     pnl_vect_free(&lambda1);
     pnl_vect_free(&sigma1);
     pnl_vect_free(&spot1);
-    delete MC;
-    delete bSM1;
+
 }
 
