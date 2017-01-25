@@ -6,6 +6,7 @@
 #include "BasketOption.h"
 #include "BlackScholesModel.h"
 #include "MonteCarloPricer.h"
+#include "pnl/pnl_finance.h"
 #include "SimulationHedger.h"
 #include <cassert>
 
@@ -24,10 +25,13 @@ int main(int argc, char **argv)
 
     double r1 = 0.05;
     double rho1 = 1;
-    PnlVect *sigma1 = pnl_vect_create_from_scalar(size1,0.3);
-    PnlVect *spot1 = pnl_vect_create_from_scalar(size1,10);
+    double sigma = 0.3;
+    PnlVect *sigma1 = pnl_vect_create_from_scalar(size1,sigma);
+    double spot = 10;
+    PnlVect *spot1 = pnl_vect_create_from_scalar(size1,spot);
     PnlVect *trends = pnl_vect_create_from_double(size1,0.);
-    PnlVect *dividends = pnl_vect_create_from_double(size1,0.);
+    double divid = 0.;
+    PnlVect *dividends = pnl_vect_create_from_double(size1,divid);
     PnlMat *rho = pnl_mat_create_from_double(size1,size1,rho1);
 
     PnlVect_Pool gaussianPool;
@@ -39,7 +43,7 @@ int main(int argc, char **argv)
     BlackScholesModel *bSM1 = new BlackScholesModel(size1,r1,trends,dividends,sigma1,spot1,rho,&gaussianPool,&assetsPool);
 
     double fdStep1 = 0.01;
-    int nbSamples1 = 100000;
+    int nbSamples1 = 1000000;
 
     PnlRng_Pool poolRng;
     poolRng.init(0);
@@ -48,49 +52,31 @@ int main(int argc, char **argv)
 
     double prix;
     double ic;
+    PnlVect *delta = pnl_vect_create(O1->nbAssets);
+    PnlVect *deltaIC = pnl_vect_create(O1->nbAssets);
 
-    time_t before;
-    time_t after;
-    double computingTime;
+    double realPrix;
+    double realDelta;
 
-    std::cout << "Call vanille :" <<"\n";
-    std::cout <<  "Prix spot du sous jacent S0 = " << GET(spot1,0) << " €" <<"\n";
-    std::cout <<  "Strike K = " << strike1 << " €" <<"\n";
-    std::cout <<  "Echéance T = " << T1 << " an" <<"\n";
-    std::cout <<  "Nombre de dates de constatation = " << nbTimeSteps1 <<"\n";
-    std::cout <<  "Volatilité du sous-jacent = " << GET(sigma1,0) <<"\n";
-    std::cout <<  "Tendance = " << GET(trends,0) <<"\n";
 
-    time(&before);
-	MC->price(NULL, 0,prix,ic,true);
-    time(&after);
-    computingTime = difftime(after,before);
+	MC->price(NULL,0,prix,ic,true);
+    MC->delta(NULL,0,delta,deltaIC,true);
+    pnl_cf_call_bs(spot,strike1,T1,r1,divid,sigma,&realPrix,&realDelta);
 
-    std::cout << "\nCalcul du prix du Call " << " \n" ;
 	std::cout << "Prix du Call en t = 0 :  " << prix << " €\n";
-    std::cout << "Temps de calcul = " << computingTime << " secondes\n\n";
+    std::cout << "Vrai prix du Call en t = 0 :  " << realPrix << " €\n";
 
-    std::cout << "Simulation de la couverture : " << " \n" ;
-    bool isParallel = true;
-    time(&before);
-    SimulationHedger::hedging_PL_Prices(MC,O1->nbTimeSteps,"ProductPrices.txt","PortfolioPrices.txt","time.txt",isParallel);
-    time(&after);
-    computingTime = difftime(after,before);
-    std::cout << "Temps de calcul = " << computingTime << " secondes";
+    assert((prix - ic < realPrix) && (prix + ic > realPrix));
+    cout << "MonteCarlo Initial Price OK" << "\n";
 
-    /*
-    PnlVect *delta = pnl_vect_create(O->nbAssets);
-    PnlVect *deltaIC = pnl_vect_create(O->nbAssets);
->>>>>>> fa9ba4348acf948966221e160d325ebc0b4b2e7d
+    std::cout << "Delta du Call en t = 0 :  " << GET(delta,0) << "\n";
+    std::cout << "Vrai delta du Call en t = 0 :  " << realDelta << "\n";
 
-    std::cout << "prix = " << prix1 << "\n";
-
-    assert((prix1 - ic1 < 1.423) && (prix1 + ic1 > 1.423));
-    cout << "1st MonteCarlo Initial Price OK" << "\n";
+    assert((GET(delta,0) - GET(deltaIC,0) < realDelta) && (GET(delta,0) + GET(deltaIC,0) > realDelta));
+    cout << "MonteCarlo Initial Delta OK" << "\n";
 
     pnl_vect_free(&lambda1);
     pnl_vect_free(&sigma1);
     pnl_vect_free(&spot1);
-     */
 }
 

@@ -180,3 +180,4 @@ double SimulationHedger::hedging_PL(MonteCarloPricer *monteCarloPricer, int H, b
     return freePortfolioValue + riskPortfolioValue - monteCarloPricer->prod->payoff(pathPayoff);
 }
 
+

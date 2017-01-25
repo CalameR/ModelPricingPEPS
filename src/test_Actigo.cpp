@@ -133,6 +133,7 @@ int main(int argc, char **argv) {
 	std::cout << "Simulation de la couverture : " << " \n" ;
     time(&before);
     SimulationHedger::hedging_PL_Prices(MC,actigo->nbTimeSteps*3,"ProductPrices.txt","PortfolioPrices.txt","time.txt",isParallel);
+    //SimulationHedger::hedging_PL(MC,actigo->nbTimeSteps*3,isParallel);
     time(&after);
     computingTime = difftime(after,before);
 
