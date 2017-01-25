@@ -10,9 +10,10 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
+
     double T = 3;
     int size = 4;
-    int nbTimeSteps = 1;
+    int nbTimeSteps = 10;
     PnlVect* lambda = pnl_vect_create_from_scalar(size,1/((double) size));
     double r = 0.1;
     PnlVect *sigma = pnl_vect_create_from_scalar(size,0.0);
@@ -34,7 +35,7 @@ int main(int argc, char **argv)
     PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
     pnl_rng_sseed(rng,time(NULL));
     PnlMat *path = pnl_mat_create(nbTimeSteps+1,size);
-
+/*
     bsm->simulateUnderRiskNeutralProba(path,T,0.,nbTimeSteps,rng,NULL);
 
     pnl_mat_print(path);
@@ -44,6 +45,18 @@ int main(int argc, char **argv)
 
     bsm->simulateUnderRiskNeutralProba(path2,T+T/nbTimeSteps,T,nbTimeSteps+1,rng,path);
     pnl_mat_print(path2);
+*/
+    cout << "testing isRecognition date" << endl;
+
+
+    for (int i = 0; i <= nbTimeSteps; i++) {
+        double timestep = T / (double)nbTimeSteps;
+        double t = timestep * ((double) i);
+        double mod = fmod(t, timestep);
+        cout << t << endl;
+    }
+
+    cout << endl;
 
     return 0;
 }
