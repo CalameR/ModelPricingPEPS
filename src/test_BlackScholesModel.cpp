@@ -32,6 +32,7 @@ int main(int argc, char **argv)
     BlackScholesModel *bsm = new BlackScholesModel(size,r,trends,dividends,sigma,spot,rho,&gaussianPool,&assetsPool);
 
     PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
+    pnl_rng_sseed(rng,time(NULL));
     PnlMat *path = pnl_mat_create(nbTimeSteps,size);
 
     bsm->simulateUnderRiskNeutralProba(path,T,0.,nbTimeSteps,rng,NULL);
