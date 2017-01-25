@@ -52,22 +52,7 @@ int main(int argc, char **argv) {
 	LET(dividends, 3) += rDOL;
 	LET(dividends, 4) += rAUD;
 
-    PnlVect_Pool gaussianPool;
-    gaussianPool.init(actigo->nbAssets);
-
-    PnlVect_Pool assetsPool;
-    assetsPool.init(actigo->nbAssets);
-
-	BlackScholesModel *bSM = new BlackScholesModel(actigo->nbAssets, rEUR, trends, dividends, sigma, spot, rho, &gaussianPool,&assetsPool);
-
-	ulong seed = 0;
-	int count;
-    int maxId = omp_get_max_threads()+1;
-	PnlRng **rngTab = pnl_rng_dcmt_create_array_id(0, maxId, seed, &count);
-
-	for (int i = 0; i < maxId; i++) {
-		pnl_rng_sseed(rngTab[i], time(NULL));
-	}
+	BlackScholesModel *bSM = new BlackScholesModel(actigo->nbAssets, rEUR, trends, dividends, sigma, spot, rho);
 
 	double fdStep = 0.00001;
 	int nbSamples = 50000;
@@ -79,10 +64,7 @@ int main(int argc, char **argv) {
 	MLET(past, 0, 3) = 0.95;
 	MLET(past, 0, 4) = 0.70;
 
-    PnlRng_Pool poolRng;
-    poolRng.init(0);
-
-	MonteCarloPricer *MC = new MonteCarloPricer(bSM, actigo, fdStep, nbSamples, &poolRng);
+	MonteCarloPricer *MC = new MonteCarloPricer(bSM, actigo, fdStep, nbSamples);
 
     double prix;
 	double ic;
@@ -139,7 +121,5 @@ int main(int argc, char **argv) {
 
     std::cout << "PL = " << PL << " €\n";
 	std::cout << "Temps de calcul = " << computingTime << " secondes";
-	delete MC;
-	delete bSM;
 
 }

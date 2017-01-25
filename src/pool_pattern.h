@@ -83,10 +83,10 @@ public:
      * With OpenMP on, set nThreads to the maximum number of threads OMP can create
      * With OpenMP off, set nThreads to 1
      */
-    void init(int size)
+    void init(int size1, int size2)
     {
 #ifdef _OPENMP
-        set_max_threads(size,omp_get_max_threads());
+        set_max_threads(size1,size2,omp_get_max_threads());
 #else
         set_max_threads(1);
 #endif
@@ -98,7 +98,7 @@ public:
      * @param n an integer. When the number of threads changes, the old elements
      * are kept. New elements are created by calling allocator.create()
      */
-    void set_max_threads(int size,int n)
+    void set_max_threads(int size1,int size2,int n)
     {
         _T *new_data = new _T[n];
         // Copy as much as possible
@@ -110,7 +110,7 @@ public:
         for (int i = nThreads; i < n; i++)
         {
             allocator.nThread = i;
-            new_data[i] = allocator.create(size);
+            new_data[i] = allocator.create(size1,size2);
         }
         delete [] data;
         nThreads = n;
@@ -124,9 +124,9 @@ public:
 struct AllocPnlVect
 {
     int nThread;
-    PnlVect *create(int size)
+    PnlVect *create(int size1, int size2)
     {
-        return pnl_vect_create(size);
+        return pnl_vect_create(size1);
     }
     void destroy(PnlVect **v)
     {
@@ -140,9 +140,9 @@ struct AllocPnlVect
 struct AllocPnlMat
 {
     int nThread;
-    PnlMat *create(int size)
+    PnlMat *create(int size1, int size2)
     {
-        return pnl_mat_new();
+        return pnl_mat_create(size1,size2);
     }
     void destroy(PnlMat **M)
     {
@@ -157,7 +157,7 @@ struct AllocPnlMat
 struct AllocPnlRng
 {
     int nThread;
-    PnlRng *create(int size)
+    PnlRng *create(int size1, int size2)
     {
         PnlRng *rng = pnl_rng_dcmt_create_id(nThread, 3128);
         pnl_rng_sseed(rng, time(NULL));

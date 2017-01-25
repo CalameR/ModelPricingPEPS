@@ -14,8 +14,6 @@ private:
     PnlVect_Pool *gaussianPool;
     PnlVect_Pool *assetsPool;
 
-	//PnlVect *gaussian;
-	//PnlVect *assets;
 	typedef double (BlackScholesModel::*TrendFunc)(int);
 
 
@@ -30,7 +28,7 @@ public:
 	PnlMat *correlations;
 
 	BlackScholesModel(int dim, double interestRate, PnlVect *trends, PnlVect *dividends, PnlVect *volatilities,
-					  PnlVect *spots, PnlMat *correlations, PnlVect_Pool *gaussianPool, PnlVect_Pool *assetsPool);
+					  PnlVect *spots, PnlMat *correlations);
 
 	void simulateUnderHistoricalProba(PnlMat *path, double T, double t, int nbTimeSteps, PnlRng *rng,
 											  const PnlMat *past = NULL);

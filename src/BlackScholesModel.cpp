@@ -5,7 +5,7 @@
 #include "BlackScholesModel.h"
 
 BlackScholesModel::BlackScholesModel(int dim, double interestRate, PnlVect *trends, PnlVect *dividends, PnlVect *volatilities,
-                                     PnlVect *spots, PnlMat *correlations, PnlVect_Pool *gaussianPool, PnlVect_Pool *assetsPool)
+                                     PnlVect *spots, PnlMat *correlations)
 {
 	BlackScholesModel::checkingInput(dim, interestRate, trends, dividends, volatilities, spots, correlations);
 
@@ -18,8 +18,11 @@ BlackScholesModel::BlackScholesModel(int dim, double interestRate, PnlVect *tren
 	this->spots = pnl_vect_copy(spots);
 	this->correlations = pnl_mat_copy(correlations);
 
-	this->gaussianPool = gaussianPool;
-	this->assetsPool = assetsPool;
+    this->gaussianPool = new PnlVect_Pool();
+    this->gaussianPool->init(this->nbRiskAssets,0);
+
+	this->assetsPool = new PnlVect_Pool();
+    this->assetsPool->init(this->nbRiskAssets,0);
 
 	/// Correlations matrix is made positive and symetric if it is not the case
 	correlations = Utils::higham(correlations);
@@ -129,6 +132,7 @@ BlackScholesModel::~BlackScholesModel() {
 	pnl_mat_free(&correlations);
 	pnl_vect_free(&trends);
 	pnl_vect_free(&dividends);
+
 }
 
 void BlackScholesModel::checkingInput(int dim, double interestRate, PnlVect *trends, PnlVect *dividends,
