@@ -170,6 +170,8 @@ double SimulationHedger::hedging_PL(MonteCarloPricer *monteCarloPricer, int H, b
         hedging(H,i,monteCarloPricer,path,pathPayoff,previousDeltas,deltas,deltasIC,assetsPrices,currentDate,timeToNextDate,freePortfolioValue,riskPortfolioValue,isParallel);
     }
 
+    double priceProduct = monteCarloPricer->prod->payoff(pathPayoff);
+
     pnl_mat_free(&pathPayoff);
     pnl_vect_free(&previousDeltas);
     pnl_vect_free(&assetsPrices);
@@ -177,7 +179,7 @@ double SimulationHedger::hedging_PL(MonteCarloPricer *monteCarloPricer, int H, b
     pnl_mat_free(&path);
     pnl_vect_free(&deltasIC);
 
-    return freePortfolioValue + riskPortfolioValue - monteCarloPricer->prod->payoff(pathPayoff);
+    return freePortfolioValue + riskPortfolioValue - priceProduct;
 }
 
 
