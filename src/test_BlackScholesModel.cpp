@@ -13,9 +13,9 @@ int main(int argc, char **argv)
     double T = 3;
     int size = 4;
     int nbTimeSteps = 1;
-    PnlVect* lambda = pnl_vect_create_from_scalar(size,0.025);
-    double r = 0.04879;
-    PnlVect *sigma = pnl_vect_create_from_scalar(size,0.2);
+    PnlVect* lambda = pnl_vect_create_from_scalar(size,1/((double) size));
+    double r = 0.1;
+    PnlVect *sigma = pnl_vect_create_from_scalar(size,0.0);
     PnlVect *spot = pnl_vect_create_from_scalar(size,100);
 
     PnlVect *trends = pnl_vect_create_from_double(size,0.);
@@ -33,9 +33,17 @@ int main(int argc, char **argv)
 
     PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
     pnl_rng_sseed(rng,time(NULL));
-    PnlMat *path = pnl_mat_create(nbTimeSteps,size);
+    PnlMat *path = pnl_mat_create(nbTimeSteps+1,size);
 
     bsm->simulateUnderRiskNeutralProba(path,T,0.,nbTimeSteps,rng,NULL);
+
+    pnl_mat_print(path);
+    PnlMat *path2 = pnl_mat_create(nbTimeSteps+2,size);
+
+    std::cout << std::endl;
+
+    bsm->simulateUnderRiskNeutralProba(path2,T+T/nbTimeSteps,T,nbTimeSteps+1,rng,path);
+    pnl_mat_print(path2);
 
     return 0;
 }
