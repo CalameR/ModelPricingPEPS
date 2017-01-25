@@ -105,9 +105,10 @@ void SimulationHedger::hedging_PL_Prices(MonteCarloPricer *monteCarloPricer, int
 
         }
 
+
         for (int i = 0; i <= H; i++) {
             hedging(H,i,monteCarloPricer,path,pathPayoff,previousDeltas,deltas,deltasIC,assetsPrices,currentDate,timeToNextDate,freePortfolioValue,riskPortfolioValue,isParallel);
-            monteCarloPricer->price(pathPayoff,currentDate,price,ic,isParallel);
+            monteCarloPricer->price(pathPayoff,currentDate-timeToNextDate,price,ic,isParallel);
             filePortfolio << freePortfolioValue + riskPortfolioValue << "\n";
             fileProduct << price << "\n";
         }

@@ -66,17 +66,27 @@ int main(int argc, char **argv)
 	std::cout << "Prix du Call en t = 0 :  " << prix << " €\n";
     std::cout << "Vrai prix du Call en t = 0 :  " << realPrix << " €\n";
 
-    assert((prix - ic < realPrix) && (prix + ic > realPrix));
-    cout << "MonteCarlo Initial Price OK" << "\n";
+    assert((prix - ic/2.0 < realPrix) && (prix + ic/2.0 > realPrix));
+    std::cout << "intervalle de confiance prix = " << ic << "\n";
+    cout << "MonteCarlo Initial Price OK" << "\n\n";
 
     std::cout << "Delta du Call en t = 0 :  " << GET(delta,0) << "\n";
     std::cout << "Vrai delta du Call en t = 0 :  " << realDelta << "\n";
 
-    assert((GET(delta,0) - GET(deltaIC,0) < realDelta) && (GET(delta,0) + GET(deltaIC,0) > realDelta));
+    assert((GET(delta,0) - GET(deltaIC,0)/2.0 < realDelta) && (GET(delta,0) + GET(deltaIC,0)/2.0 > realDelta));
+    std::cout << "intervalle de confiance delta = " << GET(deltaIC,0) << "\n";
     cout << "MonteCarlo Initial Delta OK" << "\n";
+
+    std::cout << "Simulation de la couverture : " << " \n" ;
+
+    SimulationHedger::hedging_PL_Prices(MC,O1->nbTimeSteps*3,"CallPrices.txt","PortfolioPricesCall.txt","timeCall.txt",true);
+
+
 
     pnl_vect_free(&lambda1);
     pnl_vect_free(&sigma1);
     pnl_vect_free(&spot1);
+    delete MC;
+    delete bSM1;
 }
 
