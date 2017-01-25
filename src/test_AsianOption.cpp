@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     PnlVect *trends = pnl_vect_create_from_double(size3,0.);
     PnlVect *dividends = pnl_vect_create_from_double(size3,0.);
     PnlMat *rho = pnl_mat_create_from_double(size3,size3,rho3);
-    pnl_mat_set_diag(rho,1.,size3);
+    pnl_mat_set_diag(rho,1.,0);
 
     PnlVect_Pool gaussianPool;
     gaussianPool.init(size3);
