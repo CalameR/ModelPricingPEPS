@@ -48,7 +48,7 @@ private:
 	void  nextIteration(PnlMat *path,const PnlVect *spot,int row,double timeStep,PnlRng *rng,TrendFunc trendFunc);
 	bool isRecognitionDate(double t, double T, int nbTimeSteps);
 	double getRiskNeutralTrend(int d) { return interestRate - GET(dividends, d); }
-	double getTrend(int d) { return GET(trends, d); }
+	double getTrend(int d) { return GET(trends, d) - GET(dividends, d); }
 	void checkingInput(int dim, double interestRate, PnlVect *trends, PnlVect *dividends, PnlVect *volatilities,
 					   PnlVect *spots, PnlMat *correlations);
 
