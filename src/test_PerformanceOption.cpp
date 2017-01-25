@@ -30,21 +30,12 @@ int main(int argc, char **argv)
     PnlMat *rho = pnl_mat_create_from_double(size4,size4,rho4);
     pnl_mat_set_diag(rho,1.,0);
 
-    PnlVect_Pool gaussianPool;
-    gaussianPool.init(size4);
-
-    PnlVect_Pool assetsPool;
-    assetsPool.init(size4);
-
-    BlackScholesModel *bSM4 = new BlackScholesModel(size4,r4,trends,dividends,sigma4,spot4,rho,&gaussianPool,&assetsPool);
+    BlackScholesModel *bSM4 = new BlackScholesModel(size4,r4,trends,dividends,sigma4,spot4,rho);
 
     double fdStep4 = 0.01;
     int nbSamples4 = 500000;
 
-    PnlRng_Pool poolRng;
-    poolRng.init(0);
-
-    MonteCarloPricer *MC4 = new MonteCarloPricer(bSM4, Opt4, fdStep4, nbSamples4,&poolRng);
+    MonteCarloPricer *MC4 = new MonteCarloPricer(bSM4, Opt4, fdStep4, nbSamples4);
     double prix4;
     double ic4;
 
