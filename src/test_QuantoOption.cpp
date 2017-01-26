@@ -9,6 +9,7 @@
 #include "QuantoOption.h"
 #include "BlackScholesModel.h"
 #include "MonteCarloPricer.h"
+#include "SimulationHedger.h"
 
 int main(int argc, char **argv)
 {
@@ -36,21 +37,15 @@ int main(int argc, char **argv)
     PnlMat *rho = pnl_mat_create_from_double(size2,size2,rho2);
     pnl_mat_set_diag(rho,1.,0);
 
-    PnlVect_Pool gaussianPool;
-    gaussianPool.init(size2);
 
-    PnlVect_Pool assetsPool;
-    assetsPool.init(size2);
-
-    BlackScholesModel *bSM2 = new BlackScholesModel(size2,r2,trends,dividends,sigma2,spot2,rho,&gaussianPool,&assetsPool);
+    BlackScholesModel *bSM2 = new BlackScholesModel(size2,r2,trends,dividends,sigma2,spot2,rho);
 
     double fdStep2 = 10.* FLT_EPSILON;
-    int nbSamples2 = 50000;
+    int nbSamples2 = 1000000;
 
-    PnlRng_Pool poolRng;
-    poolRng.init(0);
 
-    MonteCarloPricer *MC2 = new MonteCarloPricer(bSM2, Opt2, fdStep2, nbSamples2,&poolRng);
+
+    MonteCarloPricer *MC2 = new MonteCarloPricer(bSM2, Opt2, fdStep2, nbSamples2);
     double prix2;
     double ic2;
     MC2->price(NULL,0,prix2,ic2,false);
@@ -59,6 +54,10 @@ int main(int argc, char **argv)
     std::cout << "ic = " << ic2 << "\n";
     cout << "2nd MonteCarlo Initial Price OK" << "\n";
 
+
+    std::cout << "Simulation de la couverture : " << " \n" ;
+
+    SimulationHedger::hedging_PL_Prices(MC2,Opt2->nbTimeSteps*12*4*7,"QuantoPrices.txt","PortfolioPricesQuanto.txt","timeQuanto.txt",true);
     pnl_vect_free(&lambda2);
     pnl_vect_free(&sigma2);
     pnl_vect_free(&spot2);
