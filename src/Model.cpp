@@ -9,7 +9,7 @@ void Model::shiftSimulation(PnlMat *shift_path, const PnlMat *path, int d, doubl
 {
     // Model::shiftSimulationDebug(shift_path,path,d,h,t,timeStep);
     // /*
-    int row = (int) std::ceil((t+DBL_EPSILON)/timestep);
+    int row = (int) std::ceil((t + timestep/2.)/timestep);
     int len = path->m - row;
 
     PnlMat *modelLine = pnl_mat_create(len, 1);
