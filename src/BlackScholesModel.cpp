@@ -125,7 +125,7 @@ inline bool BlackScholesModel::isRecognitionDate(double t, double T, int nbTimeS
     int s = std::max((int) (t/timestep) - 1,0);
     int k = (int) (t/timestep + 0.5);
     for (; s <= k; s++) {
-        if (fabs(s*timestep - t) <= FLT_EPSILON)
+        if (fabs(s*timestep - t) <= 1.e4 * DBL_EPSILON)
             return true;
     }
     return false;
