@@ -121,8 +121,8 @@ void BlackScholesModel::simulateUnderRiskNeutralProba(PnlMat *path, double T, do
 }
 
 inline bool BlackScholesModel::isRecognitionDate(double t, double T, int nbTimeSteps) {
-	long double timestep = ((long double)T) / ((long double) nbTimeSteps);
-	return (fmodl(t,timestep)) < LDBL_EPSILON;
+    double timestep = ((double)T) / ((double) nbTimeSteps);
+    return (fabs(fmod(t,timestep)) <= FLT_EPSILON);
 }
 
 
