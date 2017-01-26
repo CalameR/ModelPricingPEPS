@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include "pool_pattern.h"
 #include "pnl/pnl_vector.h"
 #include "pnl/pnl_matrix.h"
 #include "pnl/pnl_random.h"
@@ -16,6 +17,7 @@ public:
 	int dim;
 	int nbRiskAssets;
 	PnlVect *spots;
+	PnlMat_Pool *modelLine;
 
 	virtual void simulateUnderHistoricalProba(PnlMat *path, double T, double t, int nbTimeStep, PnlRng *rng, const PnlMat *past = NULL) = 0;
 	virtual void simulateUnderRiskNeutralProba(PnlMat *path, double T, double t, int nbTimeStep, PnlRng *rng, const PnlMat *past = NULL) = 0;

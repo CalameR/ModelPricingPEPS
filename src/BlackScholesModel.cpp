@@ -27,6 +27,9 @@ BlackScholesModel::BlackScholesModel(int dim, double interestRate, PnlVect *tren
 	this->assetsPool = new PnlVect_Pool();
     this->assetsPool->init(this->nbRiskAssets,0);
 
+    this->spotsPool = new PnlVect_Pool();
+    this->spotsPool->init(this->nbRiskAssets,0);
+
 	/// Correlations matrix is made positive and symetric if it is not the case
 	correlations = Utils::higham(correlations);
 
@@ -63,16 +66,15 @@ inline void BlackScholesModel::simulate(PnlMat *path, double T, double t, int nb
 	// /*
 	double timeStep = T / ((double)nbTimeSteps);
 
-	PnlVect *tempSpots;
 
 	if (t==0) {
 
-		tempSpots = pnl_vect_copy(spots);
-		pnl_mat_set_row(path, spots, 0);
+        pnl_vect_clone((*spotsPool)(),spots);
+		pnl_mat_set_row(path, (*spotsPool)(), 0);
 
 		for (int row = 1; row <= nbTimeSteps; row++) {
-			pnl_mat_get_row(tempSpots, path, row - 1);
-			nextIteration(path,tempSpots,row,timeStep,rng,trendFunc);
+			pnl_mat_get_row((*spotsPool)(), path, row - 1);
+			nextIteration(path,(*spotsPool)(),row,timeStep,rng,trendFunc);
 		}
 
 	}
@@ -86,10 +88,9 @@ inline void BlackScholesModel::simulate(PnlMat *path, double T, double t, int nb
 		int row;
 		double fTimeStep;
 
-		tempSpots = pnl_vect_create(dim);
 		pnl_mat_set_subblock(path, past, 0, 0);
 
-		pnl_mat_get_row(tempSpots, past, past->m - 1);
+		pnl_mat_get_row((*spotsPool)(), past, past->m - 1);
 
 		if (isRecognitionDate(t, T, nbTimeSteps)) {
 			row = past->m;
@@ -102,13 +103,12 @@ inline void BlackScholesModel::simulate(PnlMat *path, double T, double t, int nb
 
 
 		for (; row <= nbTimeSteps; row++) {
-			nextIteration(path,tempSpots,row,fTimeStep,rng,trendFunc);
-			pnl_mat_get_row(tempSpots,path,row);
+			nextIteration(path,(*spotsPool)(),row,fTimeStep,rng,trendFunc);
+			pnl_mat_get_row((*spotsPool)(),path,row);
 			fTimeStep = timeStep;
 		}
 
 	}
-	pnl_vect_free(&tempSpots);
 	// */
 }
 

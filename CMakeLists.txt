@@ -79,6 +79,11 @@ add_executable(blackscholes-test src/test_BlackScholesModel.cpp src/BlackScholes
 target_link_libraries(blackscholes-test ${LIBS})
 
 
+# Testing Black Scholes Model
+add_executable(time-test src/time_test.cpp)
+target_link_libraries(time-test ${LIBS})
+
+
 # Print compiler flags
 get_directory_property(DirDefs COMPILE_DEFINITIONS)
 message(STATUS "COMPILE_DEFINITIONS = ${DirDefs}")

@@ -3,12 +3,13 @@
 //
 
 #include "Model.h"
+#include <cmath>
 
 void Model::shiftSimulation(PnlMat *shift_path, const PnlMat *path, int d, double h, double t, double timestep)
 {
     // Model::shiftSimulationDebug(shift_path,path,d,h,t,timeStep);
     // /*
-    int row = floor(t / timestep + 0.5);
+    int row = (int) std::ceil((t+DBL_EPSILON)/timestep);
     int len = path->m - row;
 
     PnlMat *modelLine = pnl_mat_create(len, 1);

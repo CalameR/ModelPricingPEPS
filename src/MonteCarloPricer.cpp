@@ -52,7 +52,7 @@ void MonteCarloPricer::price(const PnlMat *past, double t, double &price, double
     }
     price = (exp(-mod->getSumForwardRates(t, prod->maturity))*sum)/nbSamples;
 
-    double ksi_carre = exp(-2 * mod->getSumForwardRates(t, prod->maturity));
+    double ksi_carre = exp(-2. * mod->getSumForwardRates(t, prod->maturity));
     ksi_carre *= (sum2 / nbSamples - pow(sum / nbSamples, 2));
     ic = 2 * 1.96 * sqrt(ksi_carre / nbSamples);
     return;
@@ -77,7 +77,7 @@ void MonteCarloPricer::delta(const PnlMat *past, double t, PnlVect *delta, PnlVe
     }
 
     double ksi_carre = 0;
-    double timeStep = prod->maturity / (double)prod->nbTimeSteps;
+    double timeStep = prod->maturity / ((double) prod->nbTimeSteps);
 
     if (parallel) {
 #pragma omp parallel
@@ -120,13 +120,13 @@ void MonteCarloPricer::delta(const PnlMat *past, double t, PnlVect *delta, PnlVe
     }
 
     for (int j = 0; j < st->size; j++) {
-        ksi_carre = (exp(-2 * mod->getSumForwardRates(t, prod->maturity)) / (4 * pow(fdStep, 2) * GET(st2, j))) *
+        ksi_carre = (exp(-2. * mod->getSumForwardRates(t, prod->maturity)) / (4. * fdStep * fdStep * GET(st2, j))) *
                     (LET(sum2, j) / nbSamples - pow(LET(delta, j) / nbSamples, 2));
-        LET(ic, j) = 2 * 1.96 * sqrt(ksi_carre / nbSamples);
+        LET(ic, j) = 2. * 1.96 * sqrt(ksi_carre / nbSamples);
     }
 
     // delta <- delta*exp(-integrale(t,T,r(s)ds)/(2*nbSamples*fdStep)
-    pnl_vect_mult_scalar(delta, exp(-mod->getSumForwardRates(t, prod->maturity)) / (2 * nbSamples * fdStep));
+    pnl_vect_mult_scalar(delta, exp(-mod->getSumForwardRates(t, prod->maturity)) / (2. * nbSamples * fdStep));
 
     // delta <- delta/st
     pnl_vect_div_vect_term(delta, st);
