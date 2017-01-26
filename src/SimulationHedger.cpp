@@ -63,7 +63,7 @@ void SimulationHedger::hedging_PL_Prices(MonteCarloPricer *monteCarloPricer, int
     PnlVect *assetsPrices = pnl_vect_create(monteCarloPricer->prod->nbAssets);
 
     double currentDate = 0;
-    double timeToNextDate = (monteCarloPricer->prod->maturity)/((double)H);
+    double timeToNextDate = (monteCarloPricer->prod->maturity)/((long double) H);
 
     double price;
     double ic;
