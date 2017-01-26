@@ -2,7 +2,6 @@
 
 #include "Model.h"
 #include "Utils.h"
-#include "pool_pattern.h"
 
 
 /// \brief Mod�le de Black Scholes
