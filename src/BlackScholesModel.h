@@ -13,8 +13,10 @@ private:
 
     PnlVect_Pool *gaussianPool;
     PnlVect_Pool *assetsPool;
+    PnlVect_Pool *spotsPool;
 
-	typedef double (BlackScholesModel::*TrendFunc)(int);
+
+    typedef double (BlackScholesModel::*TrendFunc)(int);
 
 
 public:
