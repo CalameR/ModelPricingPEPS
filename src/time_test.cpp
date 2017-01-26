@@ -8,8 +8,8 @@
 #include <cmath>
 
 inline bool isRecognitionDate(double t, double T, int nbTimeSteps) {
-    double timestep = ((double)T) / ((double) nbTimeSteps);
-    return (fabs(fmod(t,timestep)) < DBL_EPSILON);
+    long double timestep = ((long double)T) / ((long double) nbTimeSteps);
+    return (fabsl(fmodl(t,timestep)) <= FLT_EPSILON);
 }
 
 int main() {
@@ -47,7 +47,7 @@ int main() {
     int err3 = 0;
     for (int i = 0; i <= nbTimeSteps ; i++) {
         double t = (double)(i) * timestep;
-        if (isRecognitionDate(t + DBL_EPSILON,T,nbTimeSteps)) {
+        if (!isRecognitionDate(t,T,nbTimeSteps)) {
             err3++;
 #ifdef P
 
