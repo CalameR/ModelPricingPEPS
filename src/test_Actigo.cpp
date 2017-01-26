@@ -27,13 +27,13 @@ int main(int argc, char **argv) {
 
 	double rEUR = 0.004;
 	double rDOL = 0.007;
-	double rAUD = 0.02;
+	double rAUD = 0.015;
 	PnlVect *sigma = pnl_vect_create(actigo->nbAssets);
 	LET(sigma, 0) = 0.16;
-	LET(sigma, 1) = 0.12;
-	LET(sigma, 2) = 0.16;
-	LET(sigma, 3) = 0.15;
-	LET(sigma, 4) = 0.15;
+	LET(sigma, 1) = 0.12 + 0.01;
+	LET(sigma, 2) = 0.16 + 0.01;
+	LET(sigma, 3) = 0.01;
+	LET(sigma, 4) = 0.01;
 
 	PnlVect *spot = pnl_vect_create(actigo->nbAssets);
 	LET(spot, 0) = 3300;
@@ -49,12 +49,12 @@ int main(int argc, char **argv) {
 
 	PnlVect *trends = pnl_vect_create_from_scalar(actigo->nbAssets, 0);
 	PnlVect *dividends = pnl_vect_create_from_scalar(actigo->nbAssets, 0);
-	LET(dividends, 3) += rDOL;
-	LET(dividends, 4) += rAUD;
+	LET(dividends, 3) = rDOL;
+	LET(dividends, 4) = rAUD;
 
 	BlackScholesModel *bSM = new BlackScholesModel(actigo->nbAssets, rEUR, trends, dividends, sigma, spot, rho);
 
-	double fdStep = 0.00001;
+	double fdStep = 1e-5;
 	int nbSamples = 50000;
 
 	PnlMat *past = pnl_mat_create(1, actigo->nbAssets);
@@ -114,8 +114,9 @@ int main(int argc, char **argv) {
 
 	std::cout << "Simulation de la couverture : " << " \n" ;
     time(&before);
-    SimulationHedger::hedging_PL_Prices(MC,actigo->nbTimeSteps*6*30,"ProductPrices.txt","PortfolioPrices.txt","time.txt",isParallel);
-    //double PL = SimulationHedger::hedging_PL(MC,actigo->nbTimeSteps*6*30,isParallel);
+	SimulationHedger::prices(MC,actigo->nbTimeSteps*6*4,"ProductPrices.txt","time.txt",isParallel);
+	//SimulationHedger::hedging_PL_Prices(MC,actigo->nbTimeSteps*6*22,"ProductPrices.txt","PortfolioPrices.txt","time.txt",isParallel);
+    //double PL = SimulationHedger::hedging_PL(MC,actigo->nbTimeSteps*2,isParallel);
     time(&after);
     computingTime = difftime(after,before);
 

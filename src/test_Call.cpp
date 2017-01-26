@@ -17,7 +17,7 @@ int main(int argc, char **argv)
     /* 1st test : Vanilla Call Option */
     double T1 = 1;
     int size1 = 1;
-    int nbTimeSteps1 = 12;
+    int nbTimeSteps1 = 1;
     double strike1 = 14;
     PnlVect* lambda1 = pnl_vect_create_from_scalar(size1,1);
 
@@ -36,8 +36,8 @@ int main(int argc, char **argv)
 
     BlackScholesModel *bSM1 = new BlackScholesModel(size1,r1,trends,dividends,sigma1,spot1,rho);
 
-    double fdStep1 = 0.01;
-    int nbSamples1 = 50000;
+    double fdStep1 = 0.0001;
+    int nbSamples1 = 500000;
 
     MonteCarloPricer *MC = new MonteCarloPricer(bSM1, O1, fdStep1, nbSamples1);
 
@@ -69,7 +69,7 @@ int main(int argc, char **argv)
 
     std::cout << "Simulation de la couverture : " << " \n" ;
 
-    SimulationHedger::hedging_PL_Prices(MC,O1->nbTimeSteps*4*7,"CallPrices.txt","PortfolioPricesCall.txt","timeCall.txt",true);
+    SimulationHedger::hedging_PL_Prices(MC,O1->nbTimeSteps*22*12,"CallPrices.txt","PortfolioPricesCall.txt","timeCall.txt",true);
 
     pnl_vect_free(&lambda1);
     pnl_vect_free(&sigma1);
