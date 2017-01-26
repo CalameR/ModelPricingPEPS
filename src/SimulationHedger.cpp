@@ -109,6 +109,8 @@ void SimulationHedger::hedging_PL_Prices(MonteCarloPricer *monteCarloPricer, int
 
 
         for (int i = 0; i <= H; i++) {
+            // Pour afficher la progression
+            //std::cout << i << " \\ " << H << "\n";
             price = hedging(H,i,monteCarloPricer,path,pathPayoff,previousDeltas,deltas,deltasIC,assetsPrices,currentDate,timeToNextDate,freePortfolioValue,riskPortfolioValue,isParallel);
             filePortfolio << freePortfolioValue + riskPortfolioValue << "\n";
             if (i!=0) {
