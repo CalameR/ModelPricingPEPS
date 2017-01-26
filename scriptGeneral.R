@@ -1,12 +1,15 @@
 x = scan("ProductPrices.txt")
 y = scan("PortfolioPrices.txt")
 t = scan("time.txt")
-plot(t,x,type="l",col="blue",xlim=c(0,8),ylim=c(85,115))
+plot(t,x,type="l",col="blue",xlim=c(0,8),ylim=c(95,130), ann=FALSE)
 
 lines(t,y,col="red")
 legend( x="topleft", 
-         legend=c("Prix du produit","Prix du portefeuille de couverture"),
+         legend=c("Prix de l'Actigo","Prix du portefeuille de couverture"),
          col=c("blue","red"), pch = 20 , bty = "n" )
+title(main = "Couverture de l'Actigo",
+              xlab = "Temps ( en années)",
+              ylab = "Valeur ( en euros)" )
 
 dev.new()
 x1 = scan("ESX50.txt")
