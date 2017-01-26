@@ -9,7 +9,9 @@
 
 inline bool isRecognitionDate(double t, double T, int nbTimeSteps) {
     double timestep = ((double)T) / ((double) nbTimeSteps);
-    return (fabs(fmod(t,timestep)) <= FLT_EPSILON);
+    return (fabs(fmod(t,timestep)) <= FLT_EPSILON)
+           or (fabs(fmod(t + DBL_EPSILON,timestep)) <= FLT_EPSILON)
+           or (fabs(fmod(t - DBL_EPSILON,timestep)) <= FLT_EPSILON);
 }
 
 int main() {
