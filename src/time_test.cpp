@@ -9,14 +9,20 @@
 
 inline bool isRecognitionDate(double t, double T, int nbTimeSteps) {
     double timestep = ((double)T) / ((double) nbTimeSteps);
-    return (fabs(fmod(t,timestep)) <= FLT_EPSILON);
+    int s = std::max((int) (t/timestep) - 1,0);
+    int k = (int) (t/timestep + 0.5);
+    for (; s <= k; s++) {
+        if (fabs(s*timestep - t) <= FLT_EPSILON)
+            return true;
+    }
+    return false;
 }
 
 int main() {
 //#define P
     double T = 8.;
     int nbTimeSteps = 16;
-    int nbHedgingSteps = nbTimeSteps * 1000;
+    int nbHedgingSteps = nbTimeSteps * 100000;
     double timestep = T/(double)(nbTimeSteps);
     double htimestep = T/(double)(nbHedgingSteps);
 
