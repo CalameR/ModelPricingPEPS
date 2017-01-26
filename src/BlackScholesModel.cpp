@@ -122,9 +122,13 @@ void BlackScholesModel::simulateUnderRiskNeutralProba(PnlMat *path, double T, do
 
 inline bool BlackScholesModel::isRecognitionDate(double t, double T, int nbTimeSteps) {
     double timestep = ((double)T) / ((double) nbTimeSteps);
-    return (fabs(fmod(t,timestep)) <= FLT_EPSILON)
-           or (fabs(fmod(t + DBL_EPSILON,timestep)) <= FLT_EPSILON)
-           or (fabs(fmod(t - DBL_EPSILON,timestep)) <= FLT_EPSILON);
+    int s = std::max((int) (t/timestep) - 1,0);
+    int k = (int) (t/timestep + 0.5);
+    for (; s <= k; s++) {
+        if (fabs(s*timestep - t) <= FLT_EPSILON)
+            return true;
+    }
+    return false;
 }
 
 
