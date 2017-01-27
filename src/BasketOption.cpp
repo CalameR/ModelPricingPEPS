@@ -14,7 +14,7 @@ BasketOption::BasketOption(double maturity, int nbAssets, int nbTimeSteps, PnlVe
     this->strike = strike;
 }
 
-double BasketOption::payoff(const PnlMat *path) const {
+double BasketOption::payoff(const PnlMat *path, PnlVect *spot) const {
     double basketPrice = 0;
     for(int d = 0; d < nbAssets; d++) {
         basketPrice += MGET(path,nbTimeSteps,d) * GET(lambda,d);

@@ -15,7 +15,7 @@ int main(int argc, char **argv)
 
     double T3 = 1.5;
     int size3 = 2;
-    int nbTimeSteps3 = 150;
+    int nbTimeSteps3 = 52+26;
     PnlVect* lambda3 = pnl_vect_create_from_scalar(size3,0.5);
 
     double strike3 = 100;
@@ -38,18 +38,28 @@ int main(int argc, char **argv)
     int nbSamples3 = 50000;
 
     MonteCarloPricer *MC3 = new MonteCarloPricer(bSM3, Opt3, fdStep3, nbSamples3);
-    double prix3;
-    double ic3;
+    //double prix3;
+    //double ic3;
 
-    MC3->price(NULL,0,prix3,ic3,false);
+    //MC3->price(NULL,0,prix3,ic3,false);
 
-    std::cout << "prix = " << prix3 << "\n";
+    //std::cout << "prix = " << prix3 << "\n";
 
-    assert((prix3 - ic3 < 4.67) && (prix3 + ic3 > 4.67));
-    cout << "3rd MonteCarlo Initial Price OK" << "\n";
+    //assert((prix3 - ic3 < 4.67) && (prix3 + ic3 > 4.67));
+    //cout << "3rd MonteCarlo Initial Price OK" << "\n";
+
+    time_t before;
+    time_t after;
+    double computingTime;
 
     std::cout << "Simulation de la couverture : " << " \n" ;
-    SimulationHedger::hedging_PL_Prices(MC3,Opt3->nbTimeSteps*3,"AsianPrices.txt","PortfolioPricesAsian.txt","timeAsian.txt",true);
+    time(&before);
+    SimulationHedger::hedging_PL_Prices(MC3,Opt3->nbTimeSteps*7,"AsianPrices.txt","PortfolioPricesAsian.txt","timeAsian.txt",false);
+    time(&after);
+    computingTime = difftime(after,before);
+
+    //std::cout << "PL = " << PL << " €\n";
+    std::cout << "Temps de calcul = " << computingTime << " secondes";
 
     pnl_vect_free(&lambda3);
     pnl_vect_free(&sigma3);

@@ -11,7 +11,7 @@ class BasketOption : public Product {
 public:
 
     BasketOption(double maturity,int nbAssets,int nbTimeSteps,PnlVect *lambda,double strike);
-    double payoff(const PnlMat *path) const;
+    double payoff(const PnlMat *path, PnlVect *spot) const;
     ~BasketOption();
     string getName() const { return "BasketOption"; }
 private:

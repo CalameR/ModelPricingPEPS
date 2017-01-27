@@ -5,7 +5,7 @@
 #include <pnl/pnl_mathtools.h>
 #include "QuantoOption.h"
 
-double QuantoOption::payoff(const PnlMat* path) const {
+double QuantoOption::payoff(const PnlMat* path, PnlVect *spot) const {
     double optionPrice = 0;
     for(int d = 0; d < nbAssets - 1; d++) {
         optionPrice += MGET(path,nbTimeSteps,d) * GET(lambda,d);

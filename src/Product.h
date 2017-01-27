@@ -15,7 +15,7 @@ public:
 	int nbTimeSteps;
 	int nbAssets;
 	string name;
-	virtual double payoff(const PnlMat* path) const = 0;
+	virtual double payoff(const PnlMat* path, PnlVect *spot) const = 0;
 	virtual string getName() const = 0;
 };
 

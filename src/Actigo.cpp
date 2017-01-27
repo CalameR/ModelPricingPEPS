@@ -17,7 +17,7 @@ Actigo::Actigo(double initialInvestment) {
 // !! path->m == nbTimeSteps + 1 !!
 // !!  path->n == nbAssets
 
-double Actigo::payoff(const PnlMat *path) const {
+double Actigo::payoff(const PnlMat *path, PnlVect *spot) const {
 
 	double sumPerf = 0.0;
 	double esx50_0 = MGET(path, 0, 0);

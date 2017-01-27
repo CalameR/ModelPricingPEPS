@@ -18,13 +18,12 @@ public:
      * @param path Matrice représentant les valeurs des sous-jacents entre la date de départ et la maturité pour chaque aléa
      * @return payoff de l'option
      */
-    double payoff(const PnlMat *path) const;
+    double payoff(const PnlMat *path, PnlVect *spot) const;
 
     virtual ~PerformanceOption();
 
     string getName() const { return "PerformanceOption"; }
 
 private:
-    PnlVect *spot;
     PnlVect *lambda;
 };

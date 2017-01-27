@@ -19,7 +19,7 @@ public:
         this->nbTimeSteps = nbTimeSteps;
         this->name = "Quanto";
     };
-    double payoff(const PnlMat* path) const;
+    double payoff(const PnlMat* path, PnlVect *spot) const;
     string getName() const {return this->name;};
 };
 

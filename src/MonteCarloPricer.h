@@ -18,6 +18,7 @@ public:
 private:
     PnlMat_Pool *path;
     PnlMat_Pool *shiftedPath;
+	PnlVect_Pool *spotsPool;
     PnlVect *st;
     PnlVect *st2;
     PnlVect *sum2;

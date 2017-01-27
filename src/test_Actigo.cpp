@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
 	BlackScholesModel *bSM = new BlackScholesModel(actigo->nbAssets, rEUR, trends, dividends, sigma, spot, rho);
 
 	double fdStep = 1e-5;
-	int nbSamples = 50000;
+	int nbSamples = 150000;
 
 	PnlMat *past = pnl_mat_create(1, actigo->nbAssets);
 	MLET(past, 0, 0) = 3300;
@@ -94,7 +94,7 @@ int main(int argc, char **argv) {
 */
 
 	// A changer si nécessaire !!!
-	bool isParallel = true;
+	bool isParallel = false;
 	std::cout << "Produit Actigo :"  << "\n\n";
 	std::cout << "Investissement initial : "  << i0 << " €\n\n";
 	std::cout <<  "Nombre de dates de constatation = " << actigo->nbTimeSteps <<"\n";
@@ -114,8 +114,8 @@ int main(int argc, char **argv) {
 
 	std::cout << "Simulation de la couverture : " << " \n" ;
     time(&before);
-	SimulationHedger::prices(MC,actigo->nbTimeSteps*6*4,"ProductPrices.txt","time.txt",isParallel);
-	//SimulationHedger::hedging_PL_Prices(MC,actigo->nbTimeSteps*6*22,"ProductPrices.txt","PortfolioPrices.txt","time.txt",isParallel);
+	//SimulationHedger::prices(MC,actigo->nbTimeSteps*6*4,"ProductPrices.txt","time.txt",isParallel);
+	SimulationHedger::hedging_PL_Prices(MC,actigo->nbTimeSteps*6*22,"ProductPrices.txt","PortfolioPrices.txt","time.txt",isParallel);
     //double PL = SimulationHedger::hedging_PL(MC,actigo->nbTimeSteps*2,isParallel);
     time(&after);
     computingTime = difftime(after,before);

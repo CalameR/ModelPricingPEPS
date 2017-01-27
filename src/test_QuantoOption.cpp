@@ -31,7 +31,7 @@ int main(int argc, char **argv)
     LET(spot2,0) = 100;
     LET(spot2,1) = 1.07525;
 
-    PnlVect *trends = pnl_vect_create_from_double(size2,0.);
+    PnlVect *trends = pnl_vect_create_from_double(size2,0.1);
     PnlVect *dividends = pnl_vect_create_from_double(size2,0.);
     LET(dividends,1) = 0.02;
     PnlMat *rho = pnl_mat_create_from_double(size2,size2,rho2);
@@ -57,7 +57,7 @@ int main(int argc, char **argv)
 
     std::cout << "Simulation de la couverture : " << " \n" ;
 
-    SimulationHedger::hedging_PL_Prices(MC2,Opt2->nbTimeSteps*12*4*7,"QuantoPrices.txt","PortfolioPricesQuanto.txt","timeQuanto.txt",true);
+    SimulationHedger::hedging_PL_Prices(MC2,Opt2->nbTimeSteps*365*10,"QuantoPrices.txt","PortfolioPricesQuanto.txt","timeQuanto.txt",true);
     pnl_vect_free(&lambda2);
     pnl_vect_free(&sigma2);
     pnl_vect_free(&spot2);

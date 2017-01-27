@@ -37,7 +37,7 @@ int main(int argc, char **argv)
     BlackScholesModel *bSM1 = new BlackScholesModel(size1,r1,trends,dividends,sigma1,spot1,rho);
 
     double fdStep1 = 0.0001;
-    int nbSamples1 = 500000;
+    int nbSamples1 = 1000000;
 
     MonteCarloPricer *MC = new MonteCarloPricer(bSM1, O1, fdStep1, nbSamples1);
 
@@ -69,7 +69,7 @@ int main(int argc, char **argv)
 
     std::cout << "Simulation de la couverture : " << " \n" ;
 
-    SimulationHedger::hedging_PL_Prices(MC,O1->nbTimeSteps*22*12,"CallPrices.txt","PortfolioPricesCall.txt","timeCall.txt",true);
+    SimulationHedger::hedging_PL_Prices(MC,O1->nbTimeSteps*22*12*10,"CallPrices.txt","PortfolioPricesCall.txt","timeCall.txt",true);
 
     pnl_vect_free(&lambda1);
     pnl_vect_free(&sigma1);

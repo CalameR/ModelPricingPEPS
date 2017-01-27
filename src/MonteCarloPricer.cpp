@@ -18,6 +18,9 @@ MonteCarloPricer::MonteCarloPricer(Model *mod, Product *prod, double fdStep, int
     this->shiftedPath = new PnlMat_Pool();
     this->shiftedPath->init(prod->nbTimeSteps + 1, prod->nbAssets);
 
+    this->spotsPool = new PnlVect_Pool();
+    this->spotsPool->init(prod->nbAssets,0);
+
     this->st = pnl_vect_copy(mod->spots);
     this->st2 = pnl_vect_copy(this->st);
     this->sum2 = pnl_vect_create(prod->nbTimeSteps + 1);
@@ -37,7 +40,7 @@ void MonteCarloPricer::price(const PnlMat *past, double t, double &price, double
 #pragma omp for reduction(+:sum,sum2)
             for (int i = 0; i < nbSamples; i++) {
                 mod->simulateUnderRiskNeutralProba((*path)(), prod->maturity, t, prod->nbTimeSteps, (*poolRng)(), past);
-                double payoff = prod->payoff((*path)());
+                double payoff = prod->payoff((*path)(),(*spotsPool)());
                 sum += payoff;
                 sum2 += pow(payoff, 2);
             }
@@ -45,7 +48,7 @@ void MonteCarloPricer::price(const PnlMat *past, double t, double &price, double
     } else {
         for (int i = 0; i < nbSamples; i++) {
             mod->simulateUnderRiskNeutralProba((*path)(), prod->maturity, t, prod->nbTimeSteps, (*poolRng)(), past);
-            double payoff = prod->payoff((*path)());
+            double payoff = prod->payoff((*path)(),(*spotsPool)());
             sum += payoff;
             sum2 += pow(payoff, 2);
         }
@@ -88,10 +91,10 @@ void MonteCarloPricer::delta(const PnlMat *past, double t, PnlVect *delta, PnlVe
                 mod->simulateUnderRiskNeutralProba((*path)(), prod->maturity, t, prod->nbTimeSteps, (*poolRng)(), past);
                 for (j = 0; j < st->size; j++) {
                     mod->shiftSimulation((*shiftedPath)(), (*path)(), j, -fdStep, t, timeStep);
-                    double payoffMoins = prod->payoff((*shiftedPath)());
+                    double payoffMoins = prod->payoff((*shiftedPath)(),(*spotsPool)());
 
                     mod->shiftSimulation((*shiftedPath)(), (*path)(), j, fdStep, t, timeStep);
-                    double payoffPlus = prod->payoff((*shiftedPath)());
+                    double payoffPlus = prod->payoff((*shiftedPath)(),(*spotsPool)());
 
 #pragma omp atomic
                     LET(delta, j) += payoffPlus - payoffMoins;
@@ -108,10 +111,10 @@ void MonteCarloPricer::delta(const PnlMat *past, double t, PnlVect *delta, PnlVe
             mod->simulateUnderRiskNeutralProba((*path)(), prod->maturity, t, prod->nbTimeSteps, (*poolRng)(), past);
             for (j = 0; j < st->size; j++) {
                 mod->shiftSimulation((*shiftedPath)(), (*path)(), j, -fdStep, t, timeStep);
-                double payoffMoins = prod->payoff((*shiftedPath)());
+                double payoffMoins = prod->payoff((*shiftedPath)(),(*spotsPool)());
 
                 mod->shiftSimulation((*shiftedPath)(), (*path)(), j, fdStep, t, timeStep);
-                double payoffPlus = prod->payoff((*shiftedPath)());
+                double payoffPlus = prod->payoff((*shiftedPath)(),(*spotsPool)());
                 LET(delta, j) += payoffPlus - payoffMoins;
                 LET(sum2, j) += pow(payoffPlus - payoffMoins, 2);
             }
