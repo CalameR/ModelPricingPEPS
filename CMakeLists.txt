@@ -54,6 +54,14 @@ target_link_libraries(actigo-test ${LIBS})
 add_executable(call-test src/BasketOption.cpp src/Utils.cpp src/BlackScholesModel.cpp src/MonteCarloPricer.cpp src/test_Call.cpp src/SimulationHedger.cpp src/Model.cpp)
 target_link_libraries(call-test ${LIBS})
 
+# Testing Vanilla Call
+add_executable(call-test-2 src/BasketOption.cpp src/Utils.cpp src/BlackScholesModel.cpp src/MonteCarloPricer.cpp src/test_Call_2.cpp src/SimulationHedger.cpp src/Model.cpp)
+target_link_libraries(call-test-2 ${LIBS})
+
+# Testing Vanilla Call
+add_executable(call-test-3 src/BasketOption.cpp src/Utils.cpp src/BlackScholesModel.cpp src/MonteCarloPricer.cpp src/test_Call_3.cpp src/SimulationHedger.cpp src/Model.cpp)
+target_link_libraries(call-test-3 ${LIBS})
+
 # Testing Asian Option
 add_executable(asian-test src/AsianOption.cpp src/Utils.cpp src/BlackScholesModel.cpp src/MonteCarloPricer.cpp src/test_AsianOption.cpp src/SimulationHedger.cpp src/Model.cpp)
 target_link_libraries(asian-test ${LIBS})

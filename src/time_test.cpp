@@ -10,9 +10,9 @@
 inline bool isRecognitionDate(double t, double T, int nbTimeSteps) {
     double timestep = ((double)T) / ((double) nbTimeSteps);
     int s = std::max((int) (t/timestep) - 1,0);
-    int k = (int) (t/timestep + 0.5);
+    int k = (int) (t/timestep + 0.5) + 1;
     for (; s <= k; s++) {
-        if (fabs(s*timestep - t) <= FLT_EPSILON)
+        if (fabs(s*timestep - t) <= 1e4 * DBL_EPSILON)
             return true;
     }
     return false;
@@ -20,9 +20,10 @@ inline bool isRecognitionDate(double t, double T, int nbTimeSteps) {
 
 int main() {
 //#define P
-    double T = 8.;
-    int nbTimeSteps = 16;
-    int nbHedgingSteps = nbTimeSteps * 100000;
+    std::cout << FLT_EPSILON/DBL_EPSILON << std::endl;
+    double T = 1.;
+    int nbTimeSteps = 100;
+    int nbHedgingSteps = nbTimeSteps*99999;
     double timestep = T/(double)(nbTimeSteps);
     double htimestep = T/(double)(nbHedgingSteps);
 
@@ -63,5 +64,23 @@ int main() {
     }
 
     std::cout << "ERR3 : " << err3 << std::endl;
+
+
+    int err4 = 0;
+    int err5 = 0;
+    for (int i = 0; i <= nbTimeSteps; i++) {
+        for (int j = 0; j < nbHedgingSteps/nbTimeSteps; j++) {
+            double t = (double)(i) * timestep + (double)(j)*htimestep;
+            int row = std::ceil(t/timestep);
+            if ((fabs(t/timestep - std::ceil(t/timestep)) <= FLT_EPSILON)
+                and (t/timestep <= std::ceil(t/timestep))){
+                row++;
+            }
+            if (row - i != 1)
+                err4++;
+        }
+
+    }
+    std::cout << "ERR4 : " << err4 << std::endl;
 
 }
