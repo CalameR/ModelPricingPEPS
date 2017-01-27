@@ -9,18 +9,20 @@ void Model::shiftSimulation(PnlMat *shift_path, const PnlMat *path, int d, doubl
 {
     // Model::shiftSimulationDebug(shift_path,path,d,h,t,timeStep);
     // /*
-    int row = (int) std::ceil((t + timestep/2.)/timestep);
-    int len = path->m - row;
 
-    PnlMat *modelLine = pnl_mat_create(len, 1);
-
-    pnl_mat_extract_subblock(modelLine, path, row, len, d, 1);
-    pnl_mat_mult_scalar(modelLine, (1.0 + h));
+    double ceil = std::ceil(t/timestep);
+    int row = (int) ceil;
+    if ((fabs(t/timestep - ceil) <= FLT_EPSILON)
+        and (t/timestep <= ceil)){
+        row++;
+    }
 
     pnl_mat_set_subblock(shift_path, path, 0, 0);
-    pnl_mat_set_subblock(shift_path, modelLine, row, d);
 
-    pnl_mat_free(&modelLine);
+    for (int i = row; i < path->m; i++) {
+        MLET(shift_path,i,d) *= (1.0 + h);
+    }
+
     // */
 }
 
