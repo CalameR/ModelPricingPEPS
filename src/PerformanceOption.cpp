@@ -6,6 +6,7 @@ PerformanceOption::PerformanceOption(double T, int size, int nbTimeSteps, PnlVec
     this->nbTimeSteps = nbTimeSteps;
     this->nbAssets = size;
     this->lambda = lambda;
+    this->type = PERFORMANCE;
 }
 
 double PerformanceOption::payoff(const PnlMat *path, PnlVect *spot) const {

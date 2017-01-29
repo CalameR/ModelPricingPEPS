@@ -10,5 +10,5 @@ double QuantoOption::payoff(const PnlMat* path, PnlVect *spot) const {
     for(int d = 0; d < nbAssets - 1; d++) {
         optionPrice += MGET(path,nbTimeSteps,d) * GET(lambda,d);
     }
-    return std::max(optionPrice / MGET(path,nbTimeSteps,nbAssets - 1) - strike, 0.);
+    return std::max(optionPrice*exp(ratesMarkets->getSumForwardRates(foreignCurrency,0,this->maturity)) / MGET(path,nbTimeSteps,nbAssets - 1) - strike, 0.);
 }

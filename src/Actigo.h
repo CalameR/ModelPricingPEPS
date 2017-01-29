@@ -3,19 +3,15 @@
 //
 #include "pnl/pnl_mathtools.h"
 #include "Product.h"
+#include "RatesMarkets.h"
 
 class Actigo : public Product {
 public:
-	Actigo(double initialInvestment, double rDol, double rAUD);
+	Actigo(double initialInvestment, RatesMarkets *ratesMarkets);
 	double payoff(const PnlMat *path, PnlVect *spot) const;
-    string getName() const { return "Actigo"; }
-
 private:
 	double initialInvestment;
 	double customerPerformance;
-	double rDOL;
-	double rAUD;
-	double getValueCashUS(double t) const { return exp(rDOL*t); }
-	double getValueCashAU(double t) const { return exp(rAUD*t); }
+	RatesMarkets *ratesMarkets;
     ~Actigo();
 };

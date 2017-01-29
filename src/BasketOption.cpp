@@ -12,6 +12,7 @@ BasketOption::BasketOption(double maturity, int nbAssets, int nbTimeSteps, PnlVe
     this->nbAssets = nbAssets;
     this->lambda = lambda;
     this->strike = strike;
+    this->type = BASKET;
 }
 
 double BasketOption::payoff(const PnlMat *path, PnlVect *spot) const {

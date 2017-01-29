@@ -7,6 +7,7 @@ AsianOption::AsianOption(double T, int size, int nbTimeSteps, PnlVect *lambda, d
     this->nbAssets = size;
     this->lambda = lambda;
     this->strike = strike;
+    this->type = ASIAN;
 }
 
 double AsianOption::payoff(const PnlMat *path, PnlVect *spot) const {

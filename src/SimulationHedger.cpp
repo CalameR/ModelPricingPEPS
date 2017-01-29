@@ -20,7 +20,7 @@ double hedging(int H, int i, MonteCarloPricer *monteCarloPricer, PnlMat *path,
 
     monteCarloPricer->delta(pathPayoff, currentDate, deltas, deltasIC, isParallel);
 
-    capitalization = exp(monteCarloPricer->mod->getSumForwardRates(currentDate, currentDate + timeToNextDate));
+    capitalization = exp(monteCarloPricer->mod->ratesMarkets->getSumForwardRates(currentDate, currentDate + timeToNextDate));
 
     if (i == 0) {
 
@@ -79,7 +79,7 @@ void SimulationHedger::hedging_PL_Prices(MonteCarloPricer *monteCarloPricer, int
 
         monteCarloPricer->mod->simulateUnderHistoricalProba(path,monteCarloPricer->prod->maturity,0, H,(*monteCarloPricer->poolRng)(),NULL);
 
-        if (monteCarloPricer->prod->getName() == "Actigo") {
+        if (monteCarloPricer->prod->getProductType() == ACTIGO) {
 
             ofstream fileESX50("ESX50.txt",ios::out|ios::trunc);
             ofstream fileSSP500("SSP500.txt",ios::out|ios::trunc);
@@ -218,7 +218,7 @@ void SimulationHedger::prices(MonteCarloPricer *monteCarloPricer, int H, char* f
 
         monteCarloPricer->mod->simulateUnderHistoricalProba(path,monteCarloPricer->prod->maturity,0, H,(*monteCarloPricer->poolRng)(),NULL);
 
-        if (monteCarloPricer->prod->getName() == "Actigo") {
+        if (monteCarloPricer->prod->getProductType() == ACTIGO) {
 
             ofstream fileESX50("ESX50.txt",ios::out|ios::trunc);
             ofstream fileSSP500("SSP500.txt",ios::out|ios::trunc);

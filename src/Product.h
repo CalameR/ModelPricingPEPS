@@ -2,6 +2,7 @@
 #include <string.h>
 #include <pnl/pnl_matrix.h>
 #include <pnl/pnl_vector.h>
+#include "DefinitionTypes.h"
 
 
 #ifndef PRODUCT_H
@@ -14,9 +15,10 @@ public:
 	double maturity;
 	int nbTimeSteps;
 	int nbAssets;
-	string name;
 	virtual double payoff(const PnlMat* path, PnlVect *spot) const = 0;
-	virtual string getName() const = 0;
+	virtual productType getProductType() const { return type; }
+protected:
+	productType type;
 };
 
 #endif

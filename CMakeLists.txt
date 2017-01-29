@@ -47,35 +47,35 @@ endif()
 set(LIBS ${LIBS} m)
 
 # Testing Actigo
-add_executable(actigo-test src/Actigo.cpp src/Utils.cpp src/BlackScholesModel.cpp src/MonteCarloPricer.cpp src/test_Actigo.cpp src/SimulationHedger.cpp src/Model.cpp)
+add_executable(actigo-test src/Actigo.cpp src/Utils.cpp src/BlackScholesModel.cpp src/MonteCarloPricer.cpp src/test_Actigo.cpp src/SimulationHedger.cpp)
 target_link_libraries(actigo-test ${LIBS})
 
 # Testing Vanilla Call
-add_executable(call-test src/BasketOption.cpp src/Utils.cpp src/BlackScholesModel.cpp src/MonteCarloPricer.cpp src/test_Call.cpp src/SimulationHedger.cpp src/Model.cpp)
+add_executable(call-test src/BasketOption.cpp src/Utils.cpp src/BlackScholesModel.cpp src/MonteCarloPricer.cpp src/test_Call.cpp src/SimulationHedger.cpp)
 target_link_libraries(call-test ${LIBS})
 
 # Testing Vanilla Call
-add_executable(call-test-2 src/BasketOption.cpp src/Utils.cpp src/BlackScholesModel.cpp src/MonteCarloPricer.cpp src/test_Call_2.cpp src/SimulationHedger.cpp src/Model.cpp)
+add_executable(call-test-2 src/BasketOption.cpp src/Utils.cpp src/BlackScholesModel.cpp src/MonteCarloPricer.cpp src/test_Call_2.cpp src/SimulationHedger.cpp)
 target_link_libraries(call-test-2 ${LIBS})
 
 # Testing Vanilla Call
-add_executable(call-test-3 src/BasketOption.cpp src/Utils.cpp src/BlackScholesModel.cpp src/MonteCarloPricer.cpp src/test_Call_3.cpp src/SimulationHedger.cpp src/Model.cpp)
+add_executable(call-test-3 src/BasketOption.cpp src/Utils.cpp src/BlackScholesModel.cpp src/MonteCarloPricer.cpp src/test_Call_3.cpp src/SimulationHedger.cpp)
 target_link_libraries(call-test-3 ${LIBS})
 
 # Testing Asian Option
-add_executable(asian-test src/AsianOption.cpp src/Utils.cpp src/BlackScholesModel.cpp src/MonteCarloPricer.cpp src/test_AsianOption.cpp src/SimulationHedger.cpp src/Model.cpp)
+add_executable(asian-test src/AsianOption.cpp src/Utils.cpp src/BlackScholesModel.cpp src/MonteCarloPricer.cpp src/test_AsianOption.cpp src/SimulationHedger.cpp)
 target_link_libraries(asian-test ${LIBS})
 
 # Testing Basket Option
-add_executable(basket-test src/BasketOption.cpp src/Utils.cpp src/BlackScholesModel.cpp src/MonteCarloPricer.cpp src/test_BasketOption.cpp src/SimulationHedger.cpp src/Model.cpp)
+add_executable(basket-test src/BasketOption.cpp src/Utils.cpp src/BlackScholesModel.cpp src/MonteCarloPricer.cpp src/test_BasketOption.cpp src/SimulationHedger.cpp)
 target_link_libraries(basket-test ${LIBS})
 
 # Testing Quanto Option
-add_executable(quanto-test src/QuantoOption.cpp src/Utils.cpp src/BlackScholesModel.cpp src/MonteCarloPricer.cpp src/test_QuantoOption.cpp src/SimulationHedger.cpp src/Model.cpp)
+add_executable(quanto-test src/QuantoOption.cpp src/Utils.cpp src/BlackScholesModel.cpp src/MonteCarloPricer.cpp src/test_QuantoOption.cpp src/SimulationHedger.cpp)
 target_link_libraries(quanto-test ${LIBS})
 
 # Testing Performance Option
-add_executable(performance-test src/PerformanceOption.cpp src/Utils.cpp src/BlackScholesModel.cpp src/MonteCarloPricer.cpp src/test_PerformanceOption.cpp src/SimulationHedger.cpp src/Model.cpp)
+add_executable(performance-test src/PerformanceOption.cpp src/Utils.cpp src/BlackScholesModel.cpp src/MonteCarloPricer.cpp src/test_PerformanceOption.cpp src/SimulationHedger.cpp)
 target_link_libraries(performance-test ${LIBS})
 
 # Testing Utils
@@ -83,7 +83,7 @@ add_executable(utils-test src/Utils.cpp src/test_Utils.cpp)
 target_link_libraries(utils-test ${LIBS})
 
 # Testing Black Scholes Model
-add_executable(blackscholes-test src/test_BlackScholesModel.cpp src/BlackScholesModel.cpp src/Model.cpp src/Utils.cpp)
+add_executable(blackscholes-test src/test_BlackScholesModel.cpp src/BlackScholesModel.cpp src/Utils.cpp)
 target_link_libraries(blackscholes-test ${LIBS})
 
 

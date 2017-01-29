@@ -14,6 +14,11 @@ int main(int argc, char **argv)
 {
     /* 4th test: Performance Option */
 
+    double r4 = 0.03;
+    PnlVect *rates = pnl_vect_create_from_scalar(1,r4);
+
+    RatesMarkets *ratesMarkets = new ConstantRatesMarkets(r4,rates);
+
     double T4 = 2;
     int size4 = 5;
     int nbTimeSteps4 = 12;
@@ -21,7 +26,6 @@ int main(int argc, char **argv)
 
     Product *Opt4 = new PerformanceOption(T4,size4,nbTimeSteps4,lambda4);
 
-    double r4 = 0.03;
     double rho4 = 0.5;
     PnlVect *sigma4 = pnl_vect_create_from_scalar(size4,0.2);
     PnlVect *spot4 = pnl_vect_create_from_scalar(size4,100);
@@ -31,10 +35,10 @@ int main(int argc, char **argv)
     PnlMat *rho = pnl_mat_create_from_double(size4,size4,rho4);
     pnl_mat_set_diag(rho,1.,0);
 
-    BlackScholesModel *bSM4 = new BlackScholesModel(size4,r4,trends,dividends,sigma4,spot4,rho);
+    BlackScholesModel *bSM4 = new BlackScholesModel(size4,r4,ratesMarkets,trends,dividends,sigma4,spot4,rho);
 
     double fdStep4 = 0.01;
-    int nbSamples4 = 200000;
+    int nbSamples4 = 1000;
 
     MonteCarloPricer *MC4 = new MonteCarloPricer(bSM4, Opt4, fdStep4, nbSamples4);
     double prix4;

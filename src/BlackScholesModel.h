@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ConstantRatesMarkets.h"
 #include "Model.h"
 #include "Utils.h"
 
@@ -19,6 +20,7 @@ private:
 
 
 public:
+
 	double interestRate;
 
 	PnlVect *trends;
@@ -28,7 +30,7 @@ public:
 
 	PnlMat *correlations;
 
-	BlackScholesModel(int dim, double interestRate, PnlVect *trends, PnlVect *dividends, PnlVect *volatilities,
+	BlackScholesModel(int dim, double interestRate, RatesMarkets *ratesMarkets, PnlVect *trends, PnlVect *dividends, PnlVect *volatilities,
 					  PnlVect *spots, PnlMat *correlations);
 
 	void simulateUnderHistoricalProba(PnlMat *path, double T, double t, int nbTimeSteps, PnlRng *rng,
@@ -36,10 +38,6 @@ public:
 
 	void simulateUnderRiskNeutralProba(PnlMat *path, double T, double t, int nbTimeSteps, PnlRng *rng,
 											   const PnlMat *past = NULL);
-
-	double getSumForwardRates(double t, double T) { return interestRate*(T - t); }
-
-    modelType getModelType() { return BLACK_SCHOLES_MODEL; }
 
 	virtual ~BlackScholesModel();
 
@@ -50,7 +48,7 @@ private:
 	bool isRecognitionDate(double t, double T, int nbTimeSteps);
 	double getRiskNeutralTrend(int d) { return interestRate - GET(dividends, d); }
 	double getTrend(int d) { return GET(trends, d) - GET(dividends, d); }
-	void checkingInput(int dim, double interestRate, PnlVect *trends, PnlVect *dividends, PnlVect *volatilities,
+	void checkingInput(int dim, double interestRate, RatesMarkets *ratesMarkets, PnlVect *trends, PnlVect *dividends, PnlVect *volatilities,
 					   PnlVect *spots, PnlMat *correlations);
 
 	// To delete once the model is finished

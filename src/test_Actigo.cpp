@@ -15,18 +15,18 @@ using namespace std;
 
 int main(int argc, char **argv) {
 	double i0 = 100;
-	double rEUR = 0.004;
-	double rDOL = 0.007;
-	double rAUD = 0.015;
+    double rEUR = 0.004;
+    double rUSD = 0.007;
+    double rAUD = 0.015;
 
-	Product *actigo = new Actigo(i0,rDOL,rAUD);
+    PnlVect *rates = pnl_vect_create(3);
+	LET(rates,EUR) = rEUR;
+    LET(rates,USD) = rUSD;
+    LET(rates,AUD) = rAUD;
 
-	/*char *actigoData = "actigoData.dat";
-	PnlMat *actigoData_from_file = pnl_mat_create_from_file(actigoData);
+    RatesMarkets *ratesMarkets = new ConstantRatesMarkets(rEUR,rates);
 
-	double payoff = actigo->payoff(actigoData_from_file);
-	std::cout << "payoff = " << payoff << std::endl;
-	*/
+	Product *actigo = new Actigo(i0,ratesMarkets);
 
 	PnlVect *sigma = pnl_vect_create(actigo->nbAssets);
 	LET(sigma, 0) = 0.16;
@@ -43,7 +43,7 @@ int main(int argc, char **argv) {
 	LET(spot, 4) = 0.70;
 
 	PnlMat *rho = pnl_mat_create_from_scalar(actigo->nbAssets, actigo->nbAssets, 0);
-	MLET(rho,0,1) = 0.35;
+	/*MLET(rho,0,1) = 0.35;
 	MLET(rho,1,0) = 0.35;
 	MLET(rho,0,2) = 0.71;
 	MLET(rho,2,0) = 0.71;
@@ -60,26 +60,23 @@ int main(int argc, char **argv) {
 
 	MLET(rho,3,4) = 0.50;
 	MLET(rho,4,3) = 0.50;
+	 */
 	for (int i = 0; i < actigo->nbAssets; i++) {
 		pnl_mat_set(rho, i, i, 1.0);
 	}
 
 	PnlVect *trends = pnl_vect_create_from_scalar(actigo->nbAssets, 0);
-	LET(trends,0) = 0.15;
-	LET(trends,1) = 0.20;
-	LET(trends,2) = 0.18;
-	LET(trends,3) = rDOL + 0.01;
+	LET(trends,0) = 0.09;
+	LET(trends,1) = 0.08;
+	LET(trends,2) = 0.07;
+	LET(trends,3) = rUSD + 0.01;
 	LET(trends,4) = rAUD + 0.01;
 	PnlVect *dividends = pnl_vect_create_from_scalar(actigo->nbAssets, 0);
-	//LET(dividends, 3) = rDOL;
-	//LET(dividends, 3) = 0;
-	//LET(dividends, 4) = rAUD;
-	//LET(dividends, 4) = 0;
 
-	BlackScholesModel *bSM = new BlackScholesModel(actigo->nbAssets, rEUR, trends, dividends, sigma, spot, rho);
+	BlackScholesModel *bSM = new BlackScholesModel(actigo->nbAssets, rEUR, ratesMarkets, trends, dividends, sigma, spot, rho);
 
 	double fdStep = 1e-5;
-	int nbSamples = 150000;
+	int nbSamples = 1000;
 
 	PnlMat *past = pnl_mat_create(1, actigo->nbAssets);
 	MLET(past, 0, 0) = 3300;
@@ -102,7 +99,6 @@ int main(int argc, char **argv) {
 	MC->price(past, 0,prix,ic,true);
 
 	std::cout << "Price = " << prix << " €\n";
-    std::cout << "Capitalization Price = " << prix*exp(bSM->getSumForwardRates(0,actigo->maturity))  << " €\n";
 
 	PnlVect *delta = pnl_vect_create(actigo->nbAssets);
 	PnlVect *deltaIC = pnl_vect_create(actigo->nbAssets);
@@ -128,7 +124,7 @@ int main(int argc, char **argv) {
 
 	std::cout << "Taux d'intérêts : "  << "\n";
 	std::cout << "rEUR = " << rEUR << "\n";
-	std::cout << "rUSD = " << rDOL << "\n";
+	std::cout << "rUSD = " << rUSD << "\n";
 	std::cout << "rAUD = " << rAUD << "\n\n";
 
 	std::cout << "Volatilités des sous-jacents : "  << "\n";

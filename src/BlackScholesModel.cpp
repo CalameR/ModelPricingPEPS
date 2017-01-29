@@ -3,14 +3,14 @@
 //
 
 #include "BlackScholesModel.h"
-#include <tgmath.h>
+//#include <tgmath.h>
 #include <cmath>
 
 
-BlackScholesModel::BlackScholesModel(int dim, double interestRate, PnlVect *trends, PnlVect *dividends, PnlVect *volatilities,
+BlackScholesModel::BlackScholesModel(int dim, double interestRate,RatesMarkets *ratesMarkets, PnlVect *trends, PnlVect *dividends, PnlVect *volatilities,
                                      PnlVect *spots, PnlMat *correlations)
 {
-	BlackScholesModel::checkingInput(dim, interestRate, trends, dividends, volatilities, spots, correlations);
+	BlackScholesModel::checkingInput(dim, interestRate, ratesMarkets, trends, dividends, volatilities, spots, correlations);
 
 	this->dim = dim;
 	this->nbRiskAssets = dim;
@@ -35,6 +35,9 @@ BlackScholesModel::BlackScholesModel(int dim, double interestRate, PnlVect *tren
 
 	this->cholesky = pnl_mat_copy(correlations);
 	pnl_mat_chol(this->cholesky);
+
+    this->type = BLACK_SCHOLES_MODEL;
+    this->ratesMarkets = ratesMarkets;
 }
 
 inline void BlackScholesModel::nextIteration(PnlMat *path, const PnlVect *spots, int row, double timeStep, PnlRng *rng,
@@ -143,7 +146,7 @@ BlackScholesModel::~BlackScholesModel() {
 
 }
 
-void BlackScholesModel::checkingInput(int dim, double interestRate, PnlVect *trends, PnlVect *dividends,
+void BlackScholesModel::checkingInput(int dim, double interestRate, RatesMarkets *ratesMarkets, PnlVect *trends, PnlVect *dividends,
 									  PnlVect *volatilities, PnlVect *spots, PnlMat *correlations)
 {
 	if (dim <= 0) {
@@ -197,6 +200,10 @@ void BlackScholesModel::checkingInput(int dim, double interestRate, PnlVect *tre
 	if (correlations->m != dim) {
 		throw std::invalid_argument("Model dimension does not match with the size of the correlation matrix!");
 	}
+
+    if (ratesMarkets->getRatesMarketsType() != CONSTANT_RATES) {
+        throw std::invalid_argument("Rates must be constant in Black Scholes Model!");
+    }
 }
 
 void BlackScholesModel::simulateDebug(PnlMat *path, double T, double t, int nbTimeSteps, PnlRng *rng,

@@ -15,6 +15,11 @@ using namespace std;
 int main(int argc, char **argv)
 {
     /* 1st test : Vanilla Call Option */
+    double r1 = 0.05;
+    PnlVect *rates = pnl_vect_create_from_scalar(1,r1);
+
+    RatesMarkets *ratesMarkets = new ConstantRatesMarkets(r1,rates);
+
     double T1 = 1;
     int size1 = 1;
     int nbTimeSteps1 = 1;
@@ -23,7 +28,6 @@ int main(int argc, char **argv)
 
     Product *O1 = new BasketOption(T1,size1,nbTimeSteps1,lambda1,strike1);
 
-    double r1 = 0.05;
     double rho1 = 1;
     double sigma = 0.3;
     PnlVect *sigma1 = pnl_vect_create_from_scalar(size1,sigma);
@@ -34,10 +38,10 @@ int main(int argc, char **argv)
     PnlVect *dividends = pnl_vect_create_from_double(size1,divid);
     PnlMat *rho = pnl_mat_create_from_double(size1,size1,rho1);
 
-    BlackScholesModel *bSM1 = new BlackScholesModel(size1,r1,trends,dividends,sigma1,spot1,rho);
+    BlackScholesModel *bSM1 = new BlackScholesModel(size1,r1,ratesMarkets,trends,dividends,sigma1,spot1,rho);
 
     double fdStep1 = 0.0001;
-    int nbSamples1 = 1000000;
+    int nbSamples1 = 50000;
 
     MonteCarloPricer *MC = new MonteCarloPricer(bSM1, O1, fdStep1, nbSamples1);
 
@@ -69,7 +73,7 @@ int main(int argc, char **argv)
 
     std::cout << "Simulation de la couverture : " << " \n" ;
 
-    SimulationHedger::hedging_PL_Prices(MC,O1->nbTimeSteps*22*12*10,"CallPrices.txt","PortfolioPricesCall.txt","timeCall.txt",true);
+    SimulationHedger::hedging_PL_Prices(MC,O1->nbTimeSteps*12*22*3,"CallPrices.txt","PortfolioPricesCall.txt","timeCall.txt",true);
 
     pnl_vect_free(&lambda1);
     pnl_vect_free(&sigma1);

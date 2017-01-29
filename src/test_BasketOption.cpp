@@ -13,6 +13,12 @@
 int main(int argc, char **argv)
 {
     /* 2nd test : Basket Option */
+
+    double rEUR = 0.04879;
+    PnlVect *rates = pnl_vect_create_from_scalar(1,rEUR);
+
+    RatesMarkets *ratesMarkets = new ConstantRatesMarkets(rEUR,rates);
+
     double T2 = 3;
     int size2 = 40;
     int nbTimeSteps2 = 1;
@@ -21,7 +27,7 @@ int main(int argc, char **argv)
 
     Product *Opt2 = new BasketOption(T2,size2,nbTimeSteps2,lambda2,strike2);
 
-    double r2 = 0.04879;
+    double r2 = rEUR;
     double rho2 = 0.0;
     PnlVect *sigma2 = pnl_vect_create_from_scalar(size2,0.2);
     PnlVect *spot2 = pnl_vect_create_from_scalar(size2,100);
@@ -31,7 +37,7 @@ int main(int argc, char **argv)
     PnlMat *rho = pnl_mat_create_from_double(size2,size2,rho2);
     pnl_mat_set_diag(rho,1.,0);
 
-    BlackScholesModel *bSM2 = new BlackScholesModel(size2,r2,trends,dividends,sigma2,spot2,rho);
+    BlackScholesModel *bSM2 = new BlackScholesModel(size2,r2,ratesMarkets,trends,dividends,sigma2,spot2,rho);
 
     double fdStep2 = 0.01;
     int nbSamples2 = 50000;

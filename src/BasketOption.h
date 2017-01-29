@@ -13,7 +13,6 @@ public:
     BasketOption(double maturity,int nbAssets,int nbTimeSteps,PnlVect *lambda,double strike);
     double payoff(const PnlMat *path, PnlVect *spot) const;
     ~BasketOption();
-    string getName() const { return "BasketOption"; }
 private:
     PnlVect *lambda;
     double strike;

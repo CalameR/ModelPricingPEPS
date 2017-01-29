@@ -20,9 +20,18 @@ int main(int argc, char **argv)
     double strike2 = 100;
     PnlVect* lambda2 = pnl_vect_create_from_scalar(size2,1./((double)size2 - 1.));
 
-    Product *Opt2 = new QuantoOption(T2,size2,nbTimeSteps2,lambda2,strike2);
+    double rEUR = 0.01;
+    double rUSD = 0.02;
 
-    double r2 = 0.01;
+    PnlVect *rates = pnl_vect_create(2);
+    LET(rates,EUR) = rEUR;
+    LET(rates,USD) = rUSD;
+
+    RatesMarkets *ratesMarkets = new ConstantRatesMarkets(rEUR,rates);
+
+    Product *Opt2 = new QuantoOption(T2,size2,nbTimeSteps2,lambda2,strike2,USD,ratesMarkets);
+
+    double r2 = rEUR;
     double rho2 = 0.0;
     PnlVect *sigma2 = pnl_vect_create(size2);
     LET(sigma2,0) = 0.2;
@@ -33,16 +42,14 @@ int main(int argc, char **argv)
 
     PnlVect *trends = pnl_vect_create_from_double(size2,0.1);
     PnlVect *dividends = pnl_vect_create_from_double(size2,0.);
-    LET(dividends,1) = 0.02;
     PnlMat *rho = pnl_mat_create_from_double(size2,size2,rho2);
     pnl_mat_set_diag(rho,1.,0);
 
 
-    BlackScholesModel *bSM2 = new BlackScholesModel(size2,r2,trends,dividends,sigma2,spot2,rho);
+    BlackScholesModel *bSM2 = new BlackScholesModel(size2,r2,ratesMarkets,trends,dividends,sigma2,spot2,rho);
 
     double fdStep2 = 10.* FLT_EPSILON;
-    int nbSamples2 = 1000000;
-
+    int nbSamples2 = 10000;
 
 
     MonteCarloPricer *MC2 = new MonteCarloPricer(bSM2, Opt2, fdStep2, nbSamples2);
@@ -57,7 +64,7 @@ int main(int argc, char **argv)
 
     std::cout << "Simulation de la couverture : " << " \n" ;
 
-    SimulationHedger::hedging_PL_Prices(MC2,Opt2->nbTimeSteps*365*10,"QuantoPrices.txt","PortfolioPricesQuanto.txt","timeQuanto.txt",true);
+    SimulationHedger::hedging_PL_Prices(MC2,Opt2->nbTimeSteps*365,"QuantoPrices.txt","PortfolioPricesQuanto.txt","timeQuanto.txt",true);
     pnl_vect_free(&lambda2);
     pnl_vect_free(&sigma2);
     pnl_vect_free(&spot2);

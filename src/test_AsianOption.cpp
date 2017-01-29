@@ -13,6 +13,11 @@ int main(int argc, char **argv)
 {
     /* 3rd test : Asian Option */
 
+    double rEUR = 0.02;
+    PnlVect *rates = pnl_vect_create_from_scalar(1,rEUR);
+
+    RatesMarkets *ratesMarkets = new ConstantRatesMarkets(rEUR,rates);
+
     double T3 = 1.5;
     int size3 = 2;
     int nbTimeSteps3 = 52+26;
@@ -22,7 +27,7 @@ int main(int argc, char **argv)
 
     Product *Opt3 = new AsianOption(T3,size3,nbTimeSteps3,lambda3,strike3);
 
-    double r3 = 0.02;
+    double r3 = rEUR;
     double rho3 = 0.0;
     PnlVect *sigma3 = pnl_vect_create_from_scalar(size3,0.2);
     PnlVect *spot3 = pnl_vect_create_from_scalar(size3,100);
@@ -32,10 +37,10 @@ int main(int argc, char **argv)
     PnlMat *rho = pnl_mat_create_from_double(size3,size3,rho3);
     pnl_mat_set_diag(rho,1.,0);
 
-    BlackScholesModel *bSM3 = new BlackScholesModel(size3,r3,trends,dividends,sigma3,spot3,rho);
+    BlackScholesModel *bSM3 = new BlackScholesModel(size3,r3,ratesMarkets,trends,dividends,sigma3,spot3,rho);
 
     double fdStep3 = 0.01;
-    int nbSamples3 = 50000;
+    int nbSamples3 = 10000;
 
     MonteCarloPricer *MC3 = new MonteCarloPricer(bSM3, Opt3, fdStep3, nbSamples3);
     //double prix3;

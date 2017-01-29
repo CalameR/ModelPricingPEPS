@@ -11,11 +11,15 @@ using namespace std;
 int main(int argc, char **argv)
 {
 
+    double r = 0.1;
+    PnlVect *rates = pnl_vect_create_from_scalar(1,r);
+
+    RatesMarkets *ratesMarkets = new ConstantRatesMarkets(r,rates);
+
     double T = 3;
     int size = 4;
     int nbTimeSteps = 10;
     PnlVect* lambda = pnl_vect_create_from_scalar(size,1/((double) size));
-    double r = 0.1;
     PnlVect *sigma = pnl_vect_create_from_scalar(size,0.0);
     PnlVect *spot = pnl_vect_create_from_scalar(size,100);
 
@@ -24,13 +28,7 @@ int main(int argc, char **argv)
     PnlMat *rho = pnl_mat_create_from_double(size,size,0.0);
     pnl_mat_set_diag(rho,1.,0);
 
-    PnlVect_Pool gaussianPool;
-    gaussianPool.init(size);
-
-    PnlVect_Pool assetsPool;
-    assetsPool.init(size);
-
-    BlackScholesModel *bsm = new BlackScholesModel(size,r,trends,dividends,sigma,spot,rho,&gaussianPool,&assetsPool);
+    BlackScholesModel *bsm = new BlackScholesModel(size,r,ratesMarkets,trends,dividends,sigma,spot,rho);
 
     PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
     pnl_rng_sseed(rng,time(NULL));
