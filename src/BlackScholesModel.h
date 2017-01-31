@@ -48,7 +48,7 @@ private:
 	bool isRecognitionDate(double t, double T, int nbTimeSteps);
 	double getRiskNeutralTrend(int d) { return interestRate - GET(dividends, d); }
 	double getTrend(int d) { return GET(trends, d) - GET(dividends, d); }
-	void checkingInput(int dim, double interestRate, RatesMarkets *ratesMarkets, PnlVect *trends, PnlVect *dividends, PnlVect *volatilities,
+	void checkingInput(int dim, double interestRate, RatesMarkets *ratesMarkets, PnlVect *trends, PnlVect **dividends, PnlVect *volatilities,
 					   PnlVect *spots, PnlMat *correlations);
 
 	// To delete once the model is finished

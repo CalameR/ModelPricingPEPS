@@ -10,7 +10,7 @@
 BlackScholesModel::BlackScholesModel(int dim, double interestRate,RatesMarkets *ratesMarkets, PnlVect *trends, PnlVect *dividends, PnlVect *volatilities,
                                      PnlVect *spots, PnlMat *correlations)
 {
-	BlackScholesModel::checkingInput(dim, interestRate, ratesMarkets, trends, dividends, volatilities, spots, correlations);
+	BlackScholesModel::checkingInput(dim, interestRate, ratesMarkets, trends, &dividends, volatilities, spots, correlations);
 
 	this->dim = dim;
 	this->nbRiskAssets = dim;
@@ -146,7 +146,7 @@ BlackScholesModel::~BlackScholesModel() {
 
 }
 
-void BlackScholesModel::checkingInput(int dim, double interestRate, RatesMarkets *ratesMarkets, PnlVect *trends, PnlVect *dividends,
+void BlackScholesModel::checkingInput(int dim, double interestRate, RatesMarkets *ratesMarkets, PnlVect *trends, PnlVect **dividends,
 									  PnlVect *volatilities, PnlVect *spots, PnlMat *correlations)
 {
 	if (dim <= 0) {
@@ -165,12 +165,12 @@ void BlackScholesModel::checkingInput(int dim, double interestRate, RatesMarkets
 		throw std::invalid_argument("Model dimension does not match with the size of the trends vector!");
 	}
 
-	if (dividends == NULL) {
-		throw std::invalid_argument("Vector of dividends is NULL!");
-	}
-
-	if (trends->size != dim) {
-		throw std::invalid_argument("Model dimension does not match with the size of the dividends vector!");
+	if (*dividends == NULL) {
+		*dividends = pnl_vect_create_from_zero(dim);
+	} else {
+		if ((*dividends)->size != dim) {
+			throw std::invalid_argument("Model dimension does not match with the size of the dividends vector!");
+		}
 	}
 
 	if (volatilities == NULL) {
